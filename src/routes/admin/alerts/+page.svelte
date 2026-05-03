@@ -1,9 +1,12 @@
 <script lang="ts">
-  import type { PageData } from './$types';
+  import MPageHeading from '$lib/ui/molecules/MPageHeading.svelte';
   import OAlertQueue from '$lib/ui/organisms/OAlertQueue.svelte';
+  import type { PageData } from './$types';
 
   export let data: PageData;
 </script>
 
-<h1>Alert queue</h1>
-<OAlertQueue items={data.alerts} filters={data.filters} />
+<section>
+  <MPageHeading title="Alert queue" />
+  <OAlertQueue items={data.alerts} filters={data.filters} />
+</section>

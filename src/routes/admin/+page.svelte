@@ -1,9 +1,12 @@
 <script lang="ts">
-  import type { PageData } from './$types';
+  import MPageHeading from '$lib/ui/molecules/MPageHeading.svelte';
   import ODashboardSummary from '$lib/ui/organisms/ODashboardSummary.svelte';
+  import type { PageData } from './$types';
 
   export let data: PageData;
 </script>
 
-<h1>Admin dashboard</h1>
-<ODashboardSummary summary={data.summary} />
+<section>
+  <MPageHeading title="Admin dashboard" />
+  <ODashboardSummary summary={data.summary} />
+</section>

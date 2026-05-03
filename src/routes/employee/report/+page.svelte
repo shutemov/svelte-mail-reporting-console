@@ -1,4 +1,5 @@
 <script lang="ts">
+  import MPageHeading from '$lib/ui/molecules/MPageHeading.svelte';
   import type { ActionData } from './$types';
   import OReportForm from '$lib/ui/organisms/OReportForm.svelte';
 
@@ -9,5 +10,7 @@
   const formError = form?.formError ?? '';
 </script>
 
-<h1>Report suspicious mail</h1>
-<OReportForm {values} {fieldErrors} {formError} />
+<section>
+  <MPageHeading title="Report suspicious mail" />
+  <OReportForm {values} {fieldErrors} {formError} />
+</section>

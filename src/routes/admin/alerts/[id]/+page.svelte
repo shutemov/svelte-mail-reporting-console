@@ -1,4 +1,5 @@
 <script lang="ts">
+  import MPageHeading from '$lib/ui/molecules/MPageHeading.svelte';
   import type { ActionData, PageData } from './$types';
   import OAlertDetails from '$lib/ui/organisms/OAlertDetails.svelte';
 
@@ -6,5 +7,7 @@
   export let form: ActionData;
 </script>
 
-<h1>Alert details</h1>
-<OAlertDetails details={data.details} formError={form?.formError ?? ''} />
+<section>
+  <MPageHeading title="Alert details" />
+  <OAlertDetails details={data.details} formError={form?.formError ?? ''} />
+</section>
