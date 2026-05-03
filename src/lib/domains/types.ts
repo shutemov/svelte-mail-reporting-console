@@ -1,0 +1,157 @@
+export type UserRole = 'employee' | 'admin' | 'viewer';
+
+export type AlertStatus =
+  | 'new'
+  | 'investigating'
+  | 'resolved_safe'
+  | 'resolved_malicious'
+  | 'closed';
+
+export type Severity = 'low' | 'medium' | 'high' | 'critical';
+
+export type RiskyAction =
+  | 'opened_email'
+  | 'clicked_link'
+  | 'downloaded_attachment'
+  | 'entered_credentials'
+  | 'reported_without_interaction';
+
+export type LearningStatus =
+  | 'not_assigned'
+  | 'assigned'
+  | 'in_progress'
+  | 'completed';
+
+export type DemoUser = {
+  id: string;
+  role: UserRole;
+  name: string;
+};
+
+export type Report = {
+  id: string;
+  reporterId: string;
+  sender: string;
+  subject: string;
+  receivedAt: string;
+  reason: string;
+  riskyActions: RiskyAction[];
+  messagePreview?: string;
+  createdAt: string;
+  alertId: string;
+};
+
+export type Alert = {
+  id: string;
+  reportId: string;
+  reporterId: string;
+  status: AlertStatus;
+  severity: Severity;
+  finalOutcome?: 'safe' | 'malicious';
+  createdAt: string;
+  updatedAt: string;
+  resolvedAt?: string;
+};
+
+export type TimelineEventType =
+  | 'report_submitted'
+  | 'investigation_started'
+  | 'alert_resolved_safe'
+  | 'alert_resolved_malicious'
+  | 'alert_closed'
+  | 'note_added'
+  | 'learning_assigned';
+
+export type TimelineEvent = {
+  id: string;
+  alertId: string;
+  actorId: string;
+  type: TimelineEventType;
+  message: string;
+  createdAt: string;
+};
+
+export type LearningAssignment = {
+  id: string;
+  alertId: string;
+  assigneeId: string;
+  moduleId: 'phishing-basics';
+  status: LearningStatus;
+  assignedAt: string;
+  startedAt?: string;
+  completedAt?: string;
+};
+
+export type FieldErrors<TValues> = Partial<Record<keyof TValues, string>>;
+
+export type MutationResult<TValues, TData = unknown> = {
+  success: boolean;
+  values?: Partial<TValues>;
+  fieldErrors?: FieldErrors<TValues>;
+  formError?: string;
+  data?: TData;
+};
+
+export type SubmitReportInput = {
+  sender: string;
+  subject: string;
+  receivedAt: string;
+  reason: string;
+  riskyActions: RiskyAction[];
+  messagePreview?: string;
+};
+
+export type AlertCommandInput = {
+  command:
+    | 'startInvestigation'
+    | 'resolveAsSafe'
+    | 'resolveAsMalicious'
+    | 'closeAlert';
+  resolutionNote?: string;
+};
+
+export type AddInvestigationNoteInput = {
+  body: string;
+};
+
+export type AssignLearningInput = {
+  moduleId: 'phishing-basics';
+};
+
+export type CompleteLearningInput = {
+  assignmentId: string;
+};
+
+export type AlertListQuery = {
+  status?: AlertStatus;
+  severity?: Severity;
+  reporterId?: string;
+  riskyAction?: RiskyAction;
+};
+
+export type DashboardSummary = {
+  openAlerts: number;
+  confirmedMalicious: number;
+  riskyActionReports: number;
+  averageTriageMinutes: number | null;
+  learningCompletionRate: number;
+};
+
+export type AlertDetailsView = {
+  alert: Alert;
+  report: Report;
+  reporter: DemoUser;
+  timeline: TimelineEvent[];
+  learningAssignment?: LearningAssignment;
+};
+
+export type LearningAssignmentView = {
+  assignment: LearningAssignment;
+  alert: Alert;
+  report: Pick<Report, 'id' | 'subject' | 'sender' | 'riskyActions'>;
+  module: {
+    id: 'phishing-basics';
+    title: string;
+    body: string;
+  };
+};
