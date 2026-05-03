@@ -1,0 +1,86 @@
+:root {
+  /* Typography */
+  font-size: 16px;
+  font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+
+  /* Color tokens */
+  --bg: #f5f7fb;
+  --surface: #ffffff;
+  --surface-muted: #f0f3f8;
+  --text: #162033;
+  --text-muted: #5d6b87;
+  --border: #d7deea;
+  --accent: #0f6cc7;
+  --accent-strong: #0d4f90;
+  --danger: #bb1c2f;
+  --success: #1f8a4c;
+  --warning: #b87900;
+
+  /* Radius + shadow */
+  --radius: 0.75rem;
+  --radius-sm: 0.5rem;
+  --shadow: 0 8px 24px rgba(15, 43, 84, 0.08);
+
+  /* Spacing scale (4pt-based, rem) */
+  --space-0: 0;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* Layout */
+  --sidebar-width: 15rem;
+  --content-max-width: 72rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at top right, #e4eefc, transparent 40%),
+    radial-gradient(circle at 20% 80%, #e9f7f0, transparent 35%),
+  var(--bg);
+  color: var(--text);
+  line-height: 1.45;
+}
+
+a {
+  color: inherit;
+}
+
+main {
+  min-height: 100vh;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: clamp(1.75rem, 1.3rem + 1.4vw, 2.25rem);
+  line-height: 1.15;
+}
+
+h2 {
+  font-size: 1.375rem;
+  line-height: 1.2;
+}

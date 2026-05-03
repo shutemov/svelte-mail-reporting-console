@@ -1,0 +1,27 @@
+<script lang="ts">
+  import type { TimelineEvent } from '$lib/domains/types';
+  export let event: TimelineEvent;
+</script>
+
+<li class="m-timeline-event">
+  <time>{new Date(event.createdAt).toLocaleString()}</time>
+  <p class="message">{event.message}</p>
+  <small class="type">{event.type}</small>
+</li>
+
+<style lang="scss">
+  .m-timeline-event {
+    list-style: none;
+    border-left: 3px solid var(--border);
+    padding: 0.4rem 0 0.4rem 0.8rem;
+
+    > time {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    > .message {
+      margin: 0.2rem 0;
+    }
+  }
+</style>
