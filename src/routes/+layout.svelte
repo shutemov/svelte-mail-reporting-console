@@ -41,8 +41,23 @@
 
   const visibleNavItems = navItems.filter((item) => item.roles.includes(data.user.role));
 
-  const isActive = (href: string) =>
-    data.currentPath === href || data.currentPath.startsWith(`${href}/`);
+  const getActiveHref = () => {
+    if (!data.currentRouteId) {
+      return null;
+    }
+    const currentRouteId = data.currentRouteId;
+
+    const matched = visibleNavItems
+      .filter(
+        (item) =>
+          currentRouteId === item.href || currentRouteId.startsWith(`${item.href}/`)
+      )
+      .sort((a, b) => b.href.length - a.href.length);
+
+    return matched[0]?.href ?? null;
+  };
+
+  const isActive = (href: string) => getActiveHref() === href;
 </script>
 
 <main class="app-shell">
