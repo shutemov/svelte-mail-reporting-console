@@ -1,6 +1,7 @@
 import { buildDashboardSummary } from '$lib/domains/dashboard-aggregation';
 import type { AlertDetailsView, AlertListQuery, LearningAssignmentView } from '$lib/domains/types';
 import type { MockRepository } from './mock-state';
+import { buildSimulationSummary } from './simulation-metrics';
 
 const moduleContent = {
   id: 'phishing-basics' as const,
@@ -29,6 +30,10 @@ export class ServerQueries {
 
   getDashboardSummary() {
     return buildDashboardSummary(this.repository.getCurrentState());
+  }
+
+  getSimulationSummary() {
+    return buildSimulationSummary(this.repository.getCurrentState(), new Date().toISOString());
   }
 
   listLearningForAssignee(userId: string): LearningAssignmentView[] {

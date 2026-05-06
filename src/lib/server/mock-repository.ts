@@ -3,15 +3,19 @@ import type {
   AlertDetailsView,
   AlertListQuery,
   DemoUser,
+  GeneratedCaseMeta,
   LearningAssignment,
   Report,
   RiskyAction,
+  Severity,
+  SimulationConfig,
   SubmitReportInput,
   TimelineEvent
 } from '$lib/domains/types';
 import { buildDashboardSummary } from '$lib/domains/dashboard-aggregation';
 import { calculateSeverity } from '$lib/domains/risk-scoring';
 import { createSeedState, type MockRepository, type MockState, type SeedName } from './mock-state';
+import { defaultSimulationConfig } from './simulation-engine';
 
 function nextId(prefix: string, list: Array<{ id: string }>): string {
   return `${prefix}-${list.length + 1}`;
@@ -128,6 +132,95 @@ export class InMemoryMockRepository implements MockRepository {
 
     this.state.timelineEvents.push(created);
     return clone(created);
+  }
+
+  updateSimulationConfig(config: SimulationConfig) {
+    this.state.simulation.config = clone(config);
+    return clone(this.state.simulation);
+  }
+
+  setSimulationMode(mode: MockState['simulation']['mode'], now: string) {
+    this.state.simulation.mode = mode;
+    if (mode === 'running' && !this.state.simulation.startedAt) {
+      this.state.simulation.startedAt = now;
+    }
+
+    return clone(this.state.simulation);
+  }
+
+  resetSimulation(now: string) {
+    const generatedAlertIds = new Set(
+      this.state.generatedCaseMeta.map((meta) => meta.alertId)
+    );
+    const generatedReportIds = new Set(
+      this.state.generatedCaseMeta.map((meta) => meta.reportId)
+    );
+    const shouldRun = this.state.simulation.config.autoStartOnReset === true;
+
+    this.state.reports = this.state.reports.filter((report) => !generatedReportIds.has(report.id));
+    this.state.alerts = this.state.alerts.filter((alert) => !generatedAlertIds.has(alert.id));
+    this.state.timelineEvents = this.state.timelineEvents.filter(
+      (event) => !generatedAlertIds.has(event.alertId)
+    );
+    this.state.learningAssignments = this.state.learningAssignments.filter(
+      (assignment) => !generatedAlertIds.has(assignment.alertId)
+    );
+    this.state.generatedCaseMeta = [];
+    this.state.simulation = {
+      mode: shouldRun ? 'running' : 'paused',
+      config: clone(this.state.simulation.config ?? defaultSimulationConfig),
+      generatedCount: 0,
+      startedAt: shouldRun ? now : undefined,
+      lastGeneratedAt: undefined
+    };
+
+    return clone(this.state.simulation);
+  }
+
+  createSimulationReport(
+    input: SubmitReportInput,
+    actor: DemoUser,
+    now: string,
+    severity: Severity,
+    meta: Omit<GeneratedCaseMeta, 'reportId' | 'alertId'>
+  ): Report {
+    const reportId = nextId('report', this.state.reports);
+    const alertId = nextId('alert', this.state.alerts);
+
+    const report: Report = {
+      id: reportId,
+      reporterId: actor.id,
+      sender: input.sender,
+      subject: input.subject,
+      receivedAt: input.receivedAt,
+      reason: input.reason,
+      riskyActions: input.riskyActions,
+      messagePreview: input.messagePreview || undefined,
+      createdAt: now,
+      alertId
+    };
+
+    const alert = {
+      id: alertId,
+      reportId,
+      reporterId: actor.id,
+      status: 'new' as const,
+      severity,
+      createdAt: now,
+      updatedAt: now
+    };
+
+    this.state.reports.push(report);
+    this.state.alerts.push(alert);
+    this.state.generatedCaseMeta.push({
+      ...meta,
+      reportId,
+      alertId
+    });
+    this.state.simulation.generatedCount += 1;
+    this.state.simulation.lastGeneratedAt = now;
+
+    return clone(report);
   }
 
   createLearningAssignment(input: {

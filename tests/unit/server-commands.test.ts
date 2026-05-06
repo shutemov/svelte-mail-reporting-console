@@ -69,4 +69,20 @@ describe('server commands', () => {
     });
     expect(second.success).toBe(true);
   });
+
+  it('injects synthetic simulation report for admin', async () => {
+    const repository = new InMemoryMockRepository('empty');
+    const controls = new InMemoryTestControls(repository);
+    const commands = new DefaultServerCommands(repository, controls, now);
+    const actor = repository.getUserById('admin-1');
+    if (!actor) throw new Error('missing actor');
+
+    const result = await commands.injectSimulationReport(actor);
+    const state = repository.getCurrentState();
+
+    expect(result.success).toBe(true);
+    expect(state.alerts).toHaveLength(1);
+    expect(state.generatedCaseMeta).toHaveLength(1);
+    expect(result.data?.queueHealth.openAlerts).toBe(1);
+  });
 });

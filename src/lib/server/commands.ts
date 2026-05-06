@@ -4,6 +4,7 @@ import {
   alertCommandSchema,
   assignLearningSchema,
   completeLearningSchema,
+  simulationConfigSchema,
   submitReportSchema
 } from '$lib/domains/schemas';
 import {
@@ -15,6 +16,8 @@ import {
   type LearningAssignment,
   type LearningAssignmentView,
   type MutationResult,
+  type SimulationConfig,
+  type SimulationSummary,
   type SubmitReportInput
 } from '$lib/domains/types';
 import { applyAlertCommand, type AlertCommand } from '$lib/domains/alert-lifecycle';
@@ -22,6 +25,8 @@ import type { MockRepository } from './mock-state';
 import type { InMemoryTestControls } from './test-controls';
 import { createTimelineEvent } from './timeline-factory';
 import { ServerQueries } from './queries';
+import { generateSyntheticReport } from './simulation-engine';
+import { buildSimulationSummary } from './simulation-metrics';
 
 type Clock = () => string;
 
@@ -45,6 +50,16 @@ export interface ServerCommands {
     alertId: string,
     input: AssignLearningInput
   ): Promise<MutationResult<AssignLearningInput, LearningAssignment>>;
+  updateSimulationConfig(
+    actor: DemoUser,
+    input: SimulationConfig
+  ): Promise<MutationResult<SimulationConfig, SimulationSummary>>;
+  startSimulation(actor: DemoUser): Promise<MutationResult<Record<string, never>, SimulationSummary>>;
+  pauseSimulation(actor: DemoUser): Promise<MutationResult<Record<string, never>, SimulationSummary>>;
+  injectSimulationReport(
+    actor: DemoUser
+  ): Promise<MutationResult<Record<string, never>, SimulationSummary>>;
+  resetSimulation(actor: DemoUser): Promise<MutationResult<Record<string, never>, SimulationSummary>>;
   startLearning(actor: DemoUser, assignmentId: string): Promise<LearningAssignmentView>;
   completeLearning(
     actor: DemoUser,
@@ -54,7 +69,7 @@ export interface ServerCommands {
 
 function toFieldErrors(error: ZodError): Record<string, string> {
   return error.issues.reduce<Record<string, string>>((acc, issue) => {
-    const key = String(issue.path[0] ?? 'form');
+    const key = issue.path.length === 0 ? 'form' : issue.path.join('.');
     if (!acc[key]) {
       acc[key] = issue.message;
     }
@@ -339,6 +354,101 @@ export class DefaultServerCommands implements ServerCommands {
     };
   }
 
+  async updateSimulationConfig(actor: DemoUser, input: SimulationConfig) {
+    if (actor.role !== 'admin') {
+      return {
+        success: false,
+        values: input,
+        formError: 'Permission denied'
+      };
+    }
+
+    const parsed = simulationConfigSchema.safeParse(input);
+    if (!parsed.success) {
+      return {
+        success: false,
+        values: input,
+        fieldErrors: toFieldErrors(parsed.error)
+      };
+    }
+
+    this.repository.updateSimulationConfig(parsed.data);
+
+    return {
+      success: true,
+      data: this.getSimulationSummary()
+    };
+  }
+
+  async startSimulation(actor: DemoUser) {
+    if (actor.role !== 'admin') {
+      return {
+        success: false,
+        formError: 'Permission denied'
+      };
+    }
+
+    this.repository.setSimulationMode('running', this.now());
+    this.injectSimulationCase();
+
+    return {
+      success: true,
+      data: this.getSimulationSummary()
+    };
+  }
+
+  async pauseSimulation(actor: DemoUser) {
+    if (actor.role !== 'admin') {
+      return {
+        success: false,
+        formError: 'Permission denied'
+      };
+    }
+
+    this.repository.setSimulationMode('paused', this.now());
+
+    return {
+      success: true,
+      data: this.getSimulationSummary()
+    };
+  }
+
+  async injectSimulationReport(actor: DemoUser) {
+    if (actor.role !== 'admin') {
+      return {
+        success: false,
+        formError: 'Permission denied'
+      };
+    }
+
+    this.injectSimulationCase();
+
+    return {
+      success: true,
+      data: this.getSimulationSummary()
+    };
+  }
+
+  async resetSimulation(actor: DemoUser) {
+    if (actor.role !== 'admin') {
+      return {
+        success: false,
+        formError: 'Permission denied'
+      };
+    }
+
+    this.repository.resetSimulation(this.now());
+    const state = this.repository.getCurrentState();
+    if (state.simulation.mode === 'running') {
+      this.injectSimulationCase();
+    }
+
+    return {
+      success: true,
+      data: this.getSimulationSummary()
+    };
+  }
+
   async startLearning(actor: DemoUser, assignmentId: string) {
     const state = this.repository.getCurrentState();
     const assignment = state.learningAssignments.find((item) => item.id === assignmentId);
@@ -363,6 +473,45 @@ export class DefaultServerCommands implements ServerCommands {
     }
 
     return view;
+  }
+
+  private injectSimulationCase() {
+    const state = this.repository.getCurrentState();
+    const reporter =
+      this.repository.getUserById('employee-1') ??
+      state.users.find((user) => user.role === 'employee');
+
+    if (!reporter) {
+      throw new Error('SIMULATION_REPORTER_NOT_FOUND');
+    }
+
+    const now = this.now();
+    const generated = generateSyntheticReport(
+      state.simulation.config,
+      now,
+      state.simulation.generatedCount
+    );
+    const created = this.repository.createSimulationReport(
+      generated.input,
+      reporter,
+      now,
+      generated.meta.groundTruth.severity,
+      generated.meta
+    );
+
+    this.repository.addTimelineEvent(
+      createTimelineEvent({
+        alertId: created.alertId,
+        actor: reporter,
+        type: 'report_submitted',
+        message: `Synthetic simulation report generated (${generated.meta.templateId})`,
+        now: created.createdAt
+      })
+    );
+  }
+
+  private getSimulationSummary() {
+    return buildSimulationSummary(this.repository.getCurrentState(), this.now());
   }
 
   async completeLearning(actor: DemoUser, input: CompleteLearningInput) {

@@ -3,10 +3,15 @@ import type {
   AlertDetailsView,
   AlertListQuery,
   DemoUser,
+  GeneratedCaseMeta,
   LearningAssignment,
   Report,
+  Severity,
+  SimulationConfig,
+  SimulationSession,
   TimelineEvent
 } from '$lib/domains/types';
+import { defaultSimulationConfig } from './simulation-engine';
 
 export type MockState = {
   users: DemoUser[];
@@ -14,6 +19,8 @@ export type MockState = {
   alerts: Alert[];
   timelineEvents: TimelineEvent[];
   learningAssignments: LearningAssignment[];
+  simulation: SimulationSession;
+  generatedCaseMeta: GeneratedCaseMeta[];
 };
 
 export type SeedName = 'default' | 'empty';
@@ -25,6 +32,14 @@ function baseUsers(): DemoUser[] {
     { id: 'admin-1', role: 'admin', name: 'Ada Admin' },
     { id: 'viewer-1', role: 'viewer', name: 'Victor Viewer' }
   ];
+}
+
+function baseSimulation(config: SimulationConfig = defaultSimulationConfig): SimulationSession {
+  return {
+    mode: 'paused',
+    config: structuredClone(config),
+    generatedCount: 0
+  };
 }
 
 function defaultSeed(): MockState {
@@ -78,7 +93,9 @@ function defaultSeed(): MockState {
     reports: [report],
     alerts: [alert],
     timelineEvents: timeline,
-    learningAssignments: []
+    learningAssignments: [],
+    simulation: baseSimulation(),
+    generatedCaseMeta: []
   };
 }
 
@@ -88,7 +105,9 @@ function emptySeed(): MockState {
     reports: [],
     alerts: [],
     timelineEvents: [],
-    learningAssignments: []
+    learningAssignments: [],
+    simulation: baseSimulation(),
+    generatedCaseMeta: []
   };
 }
 
@@ -111,6 +130,16 @@ export type MockRepository = {
   getAlertDetails(alertId: string): AlertDetailsView | null;
   updateAlert(alert: Alert): Alert;
   addTimelineEvent(event: TimelineEvent): TimelineEvent;
+  updateSimulationConfig(config: SimulationConfig): SimulationSession;
+  setSimulationMode(mode: SimulationSession['mode'], now: string): SimulationSession;
+  resetSimulation(now: string): SimulationSession;
+  createSimulationReport(
+    input: import('$lib/domains/types').SubmitReportInput,
+    actor: DemoUser,
+    now: string,
+    severity: Severity,
+    meta: Omit<GeneratedCaseMeta, 'reportId' | 'alertId'>
+  ): Report;
   createLearningAssignment(input: {
     alertId: string;
     assigneeId: string;
