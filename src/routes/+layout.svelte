@@ -36,6 +36,11 @@
       href: '/admin/alerts',
       label: 'Alert queue',
       roles: ['admin', 'viewer']
+    },
+    {
+      href: '/admin/simulation',
+      label: 'Simulation',
+      roles: ['admin', 'viewer']
     }
   ];
 
