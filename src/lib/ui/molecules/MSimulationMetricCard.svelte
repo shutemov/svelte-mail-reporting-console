@@ -1,21 +1,15 @@
 <script lang="ts">
-  import { fade } from 'svelte/transition';
+  import MAnimatedMetricValue from '$lib/ui/molecules/MAnimatedMetricValue.svelte';
 
   export let label = '';
   export let value: string | number = '';
   export let hint = '';
-
-  $: valueKey = String(value);
 </script>
 
 <article class="m-simulation-metric-card">
   <p class="label">{label}</p>
-  <div class="value-frame" aria-live="polite">
-    {#key valueKey}
-      <strong class="value" in:fade={{ duration: 180 }} out:fade={{ duration: 120 }}>
-        {value}
-      </strong>
-    {/key}
+  <div class="value-frame">
+    <MAnimatedMetricValue {value} ariaLabel={`${label}: ${value}`} />
   </div>
   {#if hint}
     <small class="hint">{hint}</small>
@@ -39,13 +33,6 @@
     > .value-frame {
       display: block;
       margin-top: 0.2rem;
-      min-height: 2.55rem;
-
-      > .value {
-        display: block;
-        font-size: 1.75rem;
-        line-height: 1.45;
-      }
     }
 
     > .hint {
