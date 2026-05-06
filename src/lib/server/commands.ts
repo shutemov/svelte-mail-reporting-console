@@ -29,6 +29,7 @@ import { generateSyntheticReport } from './simulation-engine';
 import { buildSimulationSummary } from './simulation-metrics';
 
 type Clock = () => string;
+const maxSimulationCatchUpPerTick = 25;
 
 export interface ServerCommands {
   submitReport(
@@ -60,6 +61,7 @@ export interface ServerCommands {
     actor: DemoUser
   ): Promise<MutationResult<Record<string, never>, SimulationSummary>>;
   resetSimulation(actor: DemoUser): Promise<MutationResult<Record<string, never>, SimulationSummary>>;
+  tickSimulation(actor: DemoUser): Promise<MutationResult<Record<string, never>, SimulationSummary>>;
   startLearning(actor: DemoUser, assignmentId: string): Promise<LearningAssignmentView>;
   completeLearning(
     actor: DemoUser,
@@ -449,6 +451,22 @@ export class DefaultServerCommands implements ServerCommands {
     };
   }
 
+  async tickSimulation(actor: DemoUser) {
+    if (actor.role !== 'admin') {
+      return {
+        success: false,
+        formError: 'Permission denied'
+      };
+    }
+
+    this.catchUpSimulation();
+
+    return {
+      success: true,
+      data: this.getSimulationSummary()
+    };
+  }
+
   async startLearning(actor: DemoUser, assignmentId: string) {
     const state = this.repository.getCurrentState();
     const assignment = state.learningAssignments.find((item) => item.id === assignmentId);
@@ -475,7 +493,33 @@ export class DefaultServerCommands implements ServerCommands {
     return view;
   }
 
-  private injectSimulationCase() {
+  private catchUpSimulation() {
+    const state = this.repository.getCurrentState();
+    if (state.simulation.mode !== 'running') {
+      return;
+    }
+
+    const lastGeneratedAt = state.simulation.lastGeneratedAt ?? state.simulation.startedAt;
+    if (!lastGeneratedAt) {
+      this.injectSimulationCase();
+      return;
+    }
+
+    const ratePerMinute = state.simulation.config.ratePerMinute;
+    const intervalMs = 60_000 / ratePerMinute;
+    const elapsedMs = Date.parse(this.now()) - Date.parse(lastGeneratedAt);
+    const dueCount = Math.min(
+      Math.floor(elapsedMs / intervalMs),
+      maxSimulationCatchUpPerTick
+    );
+
+    for (let index = 1; index <= dueCount; index += 1) {
+      const generatedAt = new Date(Date.parse(lastGeneratedAt) + intervalMs * index).toISOString();
+      this.injectSimulationCase(generatedAt);
+    }
+  }
+
+  private injectSimulationCase(generatedAt = this.now()) {
     const state = this.repository.getCurrentState();
     const reporter =
       this.repository.getUserById('employee-1') ??
@@ -485,16 +529,15 @@ export class DefaultServerCommands implements ServerCommands {
       throw new Error('SIMULATION_REPORTER_NOT_FOUND');
     }
 
-    const now = this.now();
     const generated = generateSyntheticReport(
       state.simulation.config,
-      now,
+      generatedAt,
       state.simulation.generatedCount
     );
     const created = this.repository.createSimulationReport(
       generated.input,
       reporter,
-      now,
+      generatedAt,
       generated.meta.groundTruth.severity,
       generated.meta
     );

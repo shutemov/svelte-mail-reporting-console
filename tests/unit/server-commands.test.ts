@@ -85,4 +85,33 @@ describe('server commands', () => {
     expect(state.generatedCaseMeta).toHaveLength(1);
     expect(result.data?.queueHealth.openAlerts).toBe(1);
   });
+
+  it('catches up running simulation based on elapsed time and rate', async () => {
+    let currentNow = '2026-01-11T12:00:00.000Z';
+    const repository = new InMemoryMockRepository('empty');
+    const controls = new InMemoryTestControls(repository);
+    const commands = new DefaultServerCommands(repository, controls, () => currentNow);
+    const actor = repository.getUserById('admin-1');
+    if (!actor) throw new Error('missing actor');
+
+    await commands.updateSimulationConfig(actor, {
+      ratePerMinute: 20,
+      maliciousRatio: 0.5,
+      severityMix: {
+        low: 25,
+        medium: 25,
+        high: 25,
+        critical: 25
+      },
+      seed: 7,
+      autoStartOnReset: false
+    });
+    await commands.startSimulation(actor);
+
+    currentNow = '2026-01-11T12:00:06.000Z';
+    const result = await commands.tickSimulation(actor);
+
+    expect(result.success).toBe(true);
+    expect(repository.getCurrentState().simulation.generatedCount).toBe(3);
+  });
 });

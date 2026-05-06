@@ -24,6 +24,15 @@ export const load: PageServerLoad = async ({ locals }) => {
     throw redirect(303, '/employee/reports');
   }
 
+  if (locals.user.role === 'admin') {
+    const tick = await commands.tickSimulation(locals.user);
+    if (tick.success && tick.data) {
+      return {
+        summary: tick.data
+      };
+    }
+  }
+
   return {
     summary: queries.getSimulationSummary()
   };

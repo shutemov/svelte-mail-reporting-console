@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { invalidateAll } from '$app/navigation';
+  import { onMount } from 'svelte';
   import MPageHeading from '$lib/ui/molecules/MPageHeading.svelte';
   import MSimulationMetricCard from '$lib/ui/molecules/MSimulationMetricCard.svelte';
   import OSimulationControlPanel from '$lib/ui/organisms/OSimulationControlPanel.svelte';
@@ -8,10 +10,20 @@
   export let data: PageData;
   export let form: ActionData;
 
-  $: summary = form?.data ?? data.summary;
+  $: summary = data.summary;
   $: queue = summary.queueHealth;
   $: triage = summary.triageOutcome;
   $: learning = summary.humanRiskLearning;
+
+  onMount(() => {
+    const timer = window.setInterval(() => {
+      if (summary.session.mode === 'running') {
+        void invalidateAll();
+      }
+    }, 5000);
+
+    return () => window.clearInterval(timer);
+  });
 </script>
 
 <section class="simulation-page">
