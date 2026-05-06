@@ -72,3 +72,59 @@ export const failNextSchema = z.object({
   status: z.number().int().min(400).max(599),
   message: z.string().min(1)
 });
+
+function formNumber(schema: z.ZodNumber) {
+  return z.preprocess((value) => {
+    if (typeof value === 'string' && value.trim() !== '') {
+      return Number(value);
+    }
+
+    return value;
+  }, schema);
+}
+
+const simulationSeverityMixSchema = z.object({
+  low: formNumber(z.number().int('Low severity share must be a whole number').min(0).max(100)),
+  medium: formNumber(
+    z.number().int('Medium severity share must be a whole number').min(0).max(100)
+  ),
+  high: formNumber(z.number().int('High severity share must be a whole number').min(0).max(100)),
+  critical: formNumber(
+    z.number().int('Critical severity share must be a whole number').min(0).max(100)
+  )
+});
+
+export const simulationConfigSchema = z
+  .object({
+    ratePerMinute: formNumber(
+      z
+        .number()
+        .int('Rate must be a whole number')
+        .min(1, 'Rate must be at least 1 per minute')
+        .max(20, 'Rate must be 20 per minute or lower')
+    ),
+    maliciousRatio: formNumber(
+      z
+        .number()
+        .min(0, 'Malicious ratio cannot be negative')
+        .max(1, 'Malicious ratio cannot be greater than 1')
+    ),
+    severityMix: simulationSeverityMixSchema,
+    seed: formNumber(z.number().int('Seed must be a whole number')),
+    autoStartOnReset: z.preprocess((value) => value === 'on' || value === true, z.boolean())
+  })
+  .superRefine((value, ctx) => {
+    const total =
+      value.severityMix.low +
+      value.severityMix.medium +
+      value.severityMix.high +
+      value.severityMix.critical;
+
+    if (total !== 100) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Severity mix must add up to 100%',
+        path: ['severityMix']
+      });
+    }
+  });

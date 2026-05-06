@@ -155,3 +155,72 @@ export type LearningAssignmentView = {
     body: string;
   };
 };
+
+export type SimulationMode = 'paused' | 'running';
+
+export type SeverityMix = Record<Severity, number>;
+
+export type SimulationConfig = {
+  ratePerMinute: number;
+  maliciousRatio: number;
+  severityMix: SeverityMix;
+  seed: number;
+  autoStartOnReset?: boolean;
+};
+
+export type GroundTruthOutcome = 'safe' | 'malicious';
+
+export type GeneratedCaseMeta = {
+  reportId: string;
+  alertId: string;
+  generatedAt: string;
+  templateId: string;
+  groundTruth: {
+    outcome: GroundTruthOutcome;
+    severity: Severity;
+  };
+};
+
+export type SimulationSession = {
+  mode: SimulationMode;
+  config: SimulationConfig;
+  generatedCount: number;
+  startedAt?: string;
+  lastGeneratedAt?: string;
+};
+
+export type QueueHealthMetrics = {
+  openAlerts: number;
+  newAlertsLast15m: number;
+  backlogGrowthRate: number;
+  oldestOpenAlertMinutes: number | null;
+};
+
+export type TriageOutcomeMetrics = {
+  totalDecisions: number;
+  correctDecisions: number;
+  falsePositives: number;
+  falseNegatives: number;
+  decisionAccuracyPercent: number;
+  falsePositiveRate: number;
+  falseNegativeRate: number;
+  precisionPercent: number;
+  recallPercent: number;
+  medianTimeToFirstActionMinutes: number | null;
+  medianTimeToResolutionMinutes: number | null;
+  alertsResolvedLastHour: number;
+};
+
+export type HumanRiskLearningMetrics = {
+  highRiskActionRate: number;
+  learningAssignmentRateForEligibleCases: number;
+  learningCompletionRate: number;
+};
+
+export type SimulationSummary = {
+  session: SimulationSession;
+  generatedCases: GeneratedCaseMeta[];
+  queueHealth: QueueHealthMetrics;
+  triageOutcome: TriageOutcomeMetrics;
+  humanRiskLearning: HumanRiskLearningMetrics;
+};
