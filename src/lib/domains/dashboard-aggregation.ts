@@ -22,18 +22,33 @@ function round(value: number): number {
   return Math.round(value * 100) / 100;
 }
 
-export function buildDashboardSummary(state: State): DashboardSummary {
+export function buildDashboardSummary(
+  state: State,
+  now: string = new Date().toISOString()
+): DashboardSummary {
+  const nowMs = Date.parse(now);
+  const cutoff15m = Date.parse(now) - 15 * 60 * 1000;
   const openAlerts = state.alerts.filter(
     (alert) => alert.status === 'new' || alert.status === 'investigating'
+  ).length;
+  const incomingReportsLast15m = state.reports.filter(
+    (report) => Date.parse(report.createdAt) >= cutoff15m && Date.parse(report.createdAt) <= nowMs
+  ).length;
+  const resolvedAlertsLast15m = state.alerts.filter(
+    (alert) =>
+      alert.resolvedAt &&
+      Date.parse(alert.resolvedAt) >= cutoff15m &&
+      Date.parse(alert.resolvedAt) <= nowMs
   ).length;
 
   const confirmedMalicious = state.alerts.filter(
     (alert) => alert.finalOutcome === 'malicious'
   ).length;
 
-  const riskyActionReports = state.reports.filter((report) =>
+  const highRiskReports = state.reports.filter((report) =>
     report.riskyActions.some((action) => riskySignalActions.includes(action))
   ).length;
+  const riskyActionReports = highRiskReports;
 
   const resolvedAlerts = state.alerts.filter((alert) => !!alert.resolvedAt);
   const averageTriageMinutes =
@@ -56,8 +71,11 @@ export function buildDashboardSummary(state: State): DashboardSummary {
 
   return {
     openAlerts,
+    incomingReportsLast15m,
     confirmedMalicious,
+    highRiskReports,
     riskyActionReports,
+    backlogGrowthRate: round((incomingReportsLast15m - resolvedAlertsLast15m) / 15),
     averageTriageMinutes,
     learningCompletionRate
   };

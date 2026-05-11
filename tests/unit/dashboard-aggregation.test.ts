@@ -65,10 +65,16 @@ const assignments: LearningAssignment[] = [
 
 describe('dashboard aggregation', () => {
   it('calculates summary', () => {
-    const summary = buildDashboardSummary({ alerts, reports, learningAssignments: assignments });
+    const summary = buildDashboardSummary(
+      { alerts, reports, learningAssignments: assignments },
+      '2026-01-01T00:10:00.000Z'
+    );
     expect(summary.openAlerts).toBe(1);
+    expect(summary.incomingReportsLast15m).toBe(2);
     expect(summary.confirmedMalicious).toBe(1);
+    expect(summary.highRiskReports).toBe(1);
     expect(summary.riskyActionReports).toBe(1);
+    expect(summary.backlogGrowthRate).toBe(0.13);
     expect(summary.averageTriageMinutes).toBe(30);
     expect(summary.learningCompletionRate).toBe(100);
   });
