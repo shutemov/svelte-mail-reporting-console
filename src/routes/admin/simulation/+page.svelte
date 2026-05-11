@@ -1,6 +1,7 @@
 <script lang="ts">
   import { invalidateAll } from '$app/navigation';
   import { onMount } from 'svelte';
+  import { tickSimulation } from '$lib/client/tick-simulation';
   import MPageHeading from '$lib/ui/molecules/MPageHeading.svelte';
   import MSimulationMetricCard from '$lib/ui/molecules/MSimulationMetricCard.svelte';
   import OSimulationControlPanel from '$lib/ui/organisms/OSimulationControlPanel.svelte';
@@ -10,15 +11,33 @@
   export let data: PageData;
   export let form: ActionData;
 
+  let ticking = false;
+
   $: summary = data.summary;
   $: queue = summary.queueHealth;
   $: triage = summary.triageOutcome;
   $: learning = summary.humanRiskLearning;
 
+  async function tickAndRefresh() {
+    if (ticking) {
+      return;
+    }
+
+    ticking = true;
+    try {
+      const result = await tickSimulation();
+      if (result.success) {
+        await invalidateAll();
+      }
+    } finally {
+      ticking = false;
+    }
+  }
+
   onMount(() => {
     const timer = window.setInterval(() => {
       if (summary.session.mode === 'running') {
-        void invalidateAll();
+        void tickAndRefresh();
       }
     }, 5000);
 
