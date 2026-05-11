@@ -1,4 +1,6 @@
 import type {
+  DemoUser,
+  EmployeePersona,
   GeneratedCaseMeta,
   GroundTruthOutcome,
   Severity,
@@ -53,20 +55,68 @@ function pickSeverity(config: SimulationConfig, random: () => number): Severity 
   return 'medium';
 }
 
-function pickTemplate(outcome: GroundTruthOutcome, random: () => number): SimulationTemplate {
+function preferredTemplateIds(persona: EmployeePersona | undefined): string[] {
+  switch (persona) {
+    case 'careful_reporter':
+      return ['safe-newsletter', 'safe-calendar-update', 'malicious-link-click'];
+    case 'frequent_clicker':
+    case 'support':
+      return ['malicious-link-click', 'safe-calendar-update'];
+    case 'attachment_opener':
+    case 'finance_target':
+      return ['malicious-attachment', 'safe-newsletter'];
+    case 'credential_risk':
+      return ['malicious-credential-harvest', 'safe-calendar-update'];
+    case 'assistant':
+    case 'manager':
+      return ['malicious-credential-harvest', 'malicious-link-click', 'safe-calendar-update'];
+    case 'hr':
+    case 'operations':
+      return ['malicious-attachment', 'safe-newsletter', 'safe-calendar-update'];
+    default:
+      return [];
+  }
+}
+
+function pickTemplate(
+  outcome: GroundTruthOutcome,
+  random: () => number,
+  persona?: EmployeePersona
+): SimulationTemplate {
   const templates = simulationTemplates.filter((template) => template.outcome === outcome);
+  const preferredIds = preferredTemplateIds(persona);
+  const preferred = templates.filter((template) => preferredIds.includes(template.id));
+
+  if (preferred.length > 0) {
+    return pick(preferred, random);
+  }
+
   return pick(templates, random);
+}
+
+export function pickSimulationReporter(
+  users: DemoUser[],
+  config: SimulationConfig,
+  sequence: number
+): DemoUser | null {
+  const employees = users.filter((user) => user.role === 'employee');
+  if (employees.length === 0) {
+    return null;
+  }
+
+  return employees[Math.abs(config.seed + sequence) % employees.length] ?? employees[0];
 }
 
 export function generateSyntheticReport(
   config: SimulationConfig,
   now: string,
-  sequence: number
+  sequence: number,
+  persona?: EmployeePersona
 ): SyntheticReport {
   const random = seededRandom(config.seed + sequence * 9973);
   const outcome: GroundTruthOutcome = random() < config.maliciousRatio ? 'malicious' : 'safe';
   const severity = pickSeverity(config, random);
-  const template = pickTemplate(outcome, random);
+  const template = pickTemplate(outcome, random, persona);
 
   return {
     input: {
