@@ -7,8 +7,10 @@
 
 <section class="o-dashboard-summary">
   <MMetricCard label="Open alerts" value={summary.openAlerts} />
+  <MMetricCard label="Incoming reports 15m" value={summary.incomingReportsLast15m} />
   <MMetricCard label="Confirmed malicious" value={summary.confirmedMalicious} />
-  <MMetricCard label="Risky reports" value={summary.riskyActionReports} />
+  <MMetricCard label="High-risk reports" value={summary.highRiskReports} />
+  <MMetricCard label="Backlog growth / min" value={summary.backlogGrowthRate} />
   <MMetricCard
     label="Avg triage (min)"
     value={summary.averageTriageMinutes === null ? '-' : summary.averageTriageMinutes}

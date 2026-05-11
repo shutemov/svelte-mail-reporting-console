@@ -1,4 +1,8 @@
 import { buildDashboardSummary } from '$lib/domains/dashboard-aggregation';
+import {
+  buildEmployeeProfileDetails,
+  buildEmployeeProfileSummaries
+} from '$lib/domains/employee-profile-aggregation';
 import type { AlertDetailsView, AlertListQuery, LearningAssignmentView } from '$lib/domains/types';
 import type { MockRepository } from './mock-state';
 import { buildSimulationSummary } from './simulation-metrics';
@@ -29,11 +33,26 @@ export class ServerQueries {
   }
 
   getDashboardSummary() {
-    return buildDashboardSummary(this.repository.getCurrentState());
+    return buildDashboardSummary(this.repository.getCurrentState(), new Date().toISOString());
   }
 
   getSimulationSummary() {
     return buildSimulationSummary(this.repository.getCurrentState(), new Date().toISOString());
+  }
+
+  listEmployeeProfileSummaries() {
+    return buildEmployeeProfileSummaries(
+      this.repository.getCurrentState(),
+      new Date().toISOString()
+    );
+  }
+
+  getEmployeeProfileDetails(employeeId: string) {
+    return buildEmployeeProfileDetails(
+      this.repository.getCurrentState(),
+      employeeId,
+      new Date().toISOString()
+    );
   }
 
   listLearningForAssignee(userId: string): LearningAssignmentView[] {

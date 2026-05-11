@@ -22,10 +22,24 @@ export type LearningStatus =
   | 'in_progress'
   | 'completed';
 
+export type EmployeePersona =
+  | 'careful_reporter'
+  | 'frequent_clicker'
+  | 'attachment_opener'
+  | 'credential_risk'
+  | 'finance_target'
+  | 'manager'
+  | 'assistant'
+  | 'hr'
+  | 'support'
+  | 'operations';
+
 export type DemoUser = {
   id: string;
   role: UserRole;
   name: string;
+  profileEnabled?: boolean;
+  persona?: EmployeePersona;
 };
 
 export type Report = {
@@ -131,8 +145,11 @@ export type AlertListQuery = {
 
 export type DashboardSummary = {
   openAlerts: number;
+  incomingReportsLast15m: number;
   confirmedMalicious: number;
+  highRiskReports: number;
   riskyActionReports: number;
+  backlogGrowthRate: number;
   averageTriageMinutes: number | null;
   learningCompletionRate: number;
 };
@@ -223,4 +240,50 @@ export type SimulationSummary = {
   queueHealth: QueueHealthMetrics;
   triageOutcome: TriageOutcomeMetrics;
   humanRiskLearning: HumanRiskLearningMetrics;
+};
+
+export type EmployeeRiskStatus = 'green' | 'yellow' | 'red';
+
+export type EmployeeProfileSummary = {
+  user: DemoUser;
+  riskStatus: EmployeeRiskStatus;
+  riskStatusLabel: string;
+  totalReports: number;
+  reportsLast15m: number;
+  openAlerts: number;
+  highRiskReports: number;
+  clickedLinkCount: number;
+  downloadedAttachmentCount: number;
+  enteredCredentialsCount: number;
+  confirmedMalicious: number;
+  resolvedSafe: number;
+  pendingTriage: number;
+  learningAssigned: number;
+  learningCompleted: number;
+  learningCompletionRate: number;
+  lastReportAt: string | null;
+};
+
+export type EmployeeRiskSignal = {
+  id: string;
+  alertId: string;
+  reportId: string;
+  type:
+    | RiskyAction
+    | 'confirmed_malicious'
+    | 'resolved_safe'
+    | 'learning_assigned'
+    | 'learning_completed';
+  severity: Severity;
+  createdAt: string;
+  message: string;
+};
+
+export type EmployeeProfileDetails = {
+  user: DemoUser;
+  summary: EmployeeProfileSummary;
+  reports: Report[];
+  alerts: Alert[];
+  learningAssignments: LearningAssignment[];
+  recentRiskSignals: EmployeeRiskSignal[];
 };
