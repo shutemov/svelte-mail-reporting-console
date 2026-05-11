@@ -25,7 +25,7 @@ import type { MockRepository } from './mock-state';
 import type { InMemoryTestControls } from './test-controls';
 import { createTimelineEvent } from './timeline-factory';
 import { ServerQueries } from './queries';
-import { generateSyntheticReport } from './simulation-engine';
+import { generateSyntheticReport, pickSimulationReporter } from './simulation-engine';
 import { buildSimulationSummary } from './simulation-metrics';
 
 type Clock = () => string;
@@ -521,9 +521,11 @@ export class DefaultServerCommands implements ServerCommands {
 
   private injectSimulationCase(generatedAt = this.now()) {
     const state = this.repository.getCurrentState();
-    const reporter =
-      this.repository.getUserById('employee-1') ??
-      state.users.find((user) => user.role === 'employee');
+    const reporter = pickSimulationReporter(
+      state.users,
+      state.simulation.config,
+      state.simulation.generatedCount
+    );
 
     if (!reporter) {
       throw new Error('SIMULATION_REPORTER_NOT_FOUND');
@@ -532,7 +534,8 @@ export class DefaultServerCommands implements ServerCommands {
     const generated = generateSyntheticReport(
       state.simulation.config,
       generatedAt,
-      state.simulation.generatedCount
+      state.simulation.generatedCount,
+      reporter.persona
     );
     const created = this.repository.createSimulationReport(
       generated.input,

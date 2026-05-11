@@ -86,6 +86,23 @@ describe('server commands', () => {
     expect(result.data?.queueHealth.openAlerts).toBe(1);
   });
 
+  it('spreads synthetic reports across seeded employees', async () => {
+    const repository = new InMemoryMockRepository('empty');
+    const controls = new InMemoryTestControls(repository);
+    const commands = new DefaultServerCommands(repository, controls, now);
+    const actor = repository.getUserById('admin-1');
+    if (!actor) throw new Error('missing actor');
+
+    await commands.injectSimulationReport(actor);
+    await commands.injectSimulationReport(actor);
+    await commands.injectSimulationReport(actor);
+
+    const reporterIds = new Set(repository.getCurrentState().reports.map((report) => report.reporterId));
+
+    expect(reporterIds.size).toBeGreaterThan(1);
+    expect(reporterIds.has('employee-1')).toBe(false);
+  });
+
   it('catches up running simulation based on elapsed time and rate', async () => {
     let currentNow = '2026-01-11T12:00:00.000Z';
     const repository = new InMemoryMockRepository('empty');
