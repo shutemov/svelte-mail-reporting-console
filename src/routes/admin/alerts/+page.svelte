@@ -13,7 +13,7 @@
       <span>Manual employee reports and synthetic simulation cases share one triage queue.</span>
     </div>
   </header>
-  <OAlertQueue items={data.alerts} filters={data.filters} />
+  <OAlertQueue items={data.alerts} filters={data.filters} totalItems={data.totalAlerts} />
 </section>
 
 <style lang="scss">

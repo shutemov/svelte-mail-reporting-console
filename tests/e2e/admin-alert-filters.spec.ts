@@ -17,6 +17,8 @@ test('admin alert filters survive reload via URL params', async ({ page }) => {
 
   await page.goto('/admin/alerts?status=investigating&severity=high&riskyAction=clicked_link');
   await expect(page).toHaveURL(/status=investigating/);
+  await expect(page.getByText('Showing 1 of 1 alert')).toBeVisible();
+  await expect(page.getByText('1 alert matches filters · 1 alert total in queue')).toBeVisible();
 
   await page.reload();
   await expect(page).toHaveURL(/severity=high/);
@@ -28,6 +30,8 @@ test('admin alert filters apply from queue form with empty fields', async ({ pag
   await asAdmin(page);
 
   await page.goto('/admin/alerts');
+  await expect(page.getByText('Showing 1 of 1 alert')).toBeVisible();
+  await expect(page.getByText('1 alert total in queue')).toBeVisible();
   await page.getByRole('combobox').nth(1).selectOption('high');
   await page.getByRole('button', { name: 'Apply filters' }).click();
 

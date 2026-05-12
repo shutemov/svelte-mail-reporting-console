@@ -5,15 +5,49 @@
   import AButton from '$lib/ui/atoms/AButton.svelte';
   import MAlertSummary from '$lib/ui/molecules/MAlertSummary.svelte';
 
+  const pageSize = 20;
+
   export let items: AlertDetailsView[] = [];
   export let filters: AlertListQuery = {};
+  export let totalItems = items.length;
+
+  let visibleCount = pageSize;
+  let previousItemsSignature = '';
+
+  $: {
+    const nextItemsSignature = items.map((item) => item.alert.id).join('|');
+    if (nextItemsSignature !== previousItemsSignature) {
+      previousItemsSignature = nextItemsSignature;
+      visibleCount = pageSize;
+    }
+  }
+  $: visibleItems = items.slice(0, visibleCount);
+  $: hiddenCount = Math.max(items.length - visibleItems.length, 0);
+  $: hasActiveFilters = Boolean(
+    filters.status || filters.severity || filters.riskyAction || filters.reporterId
+  );
+  $: totalQueueLabel = `${formatAlertCount(totalItems)} total in queue`;
+  $: matchingLabel =
+    items.length === 1 ? '1 alert matches filters' : `${items.length} alerts match filters`;
+  $: queueTotalLabel = !hasActiveFilters
+    ? totalQueueLabel
+    : `${matchingLabel} · ${totalQueueLabel}`;
+
+  function loadMore() {
+    visibleCount = Math.min(visibleCount + pageSize, items.length);
+  }
+
+  function formatAlertCount(count: number) {
+    return `${count} ${count === 1 ? 'alert' : 'alerts'}`;
+  }
 </script>
 
 <section class="o-alert-queue">
   <div class="queue-viewbar" aria-label="Queue view presets">
     <div>
       <span>Queue view</span>
-      <b>{items.length} alerts in current view</b>
+      <b>Showing {visibleItems.length} of {formatAlertCount(items.length)}</b>
+      <small>{queueTotalLabel}</small>
     </div>
     <p>Prioritize by severity, risky action, age, and evidence.</p>
   </div>
@@ -55,9 +89,15 @@
     <p class="empty">No alerts found for current filter.</p>
   {:else}
     <div class="list">
-      {#each items as item (item.alert.id)}
+      {#each visibleItems as item (item.alert.id)}
         <MAlertSummary {item} />
       {/each}
+      {#if hiddenCount > 0}
+        <div class="pagination-guard" aria-live="polite">
+          <span>{hiddenCount} alerts hidden to keep the queue scannable.</span>
+          <AButton type="button" variant="secondary" onclick={loadMore}>Load more alerts</AButton>
+        </div>
+      {/if}
     </div>
   {/if}
 </section>
@@ -87,6 +127,13 @@
         margin-top: 0.25rem;
         font-size: 1.125rem;
         font-weight: 500;
+      }
+
+      small {
+        display: block;
+        margin-top: 0.25rem;
+        color: var(--text-muted);
+        font-size: 0.8125rem;
       }
 
       p {
@@ -126,6 +173,27 @@
       background: var(--surface);
     }
 
+    .pagination-guard {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      min-height: 3.5rem;
+      padding: 0.75rem 0.875rem;
+      border-radius: var(--radius-sm);
+      background: var(--surface-raised);
+
+      span {
+        color: var(--text-muted);
+        font-size: 0.875rem;
+      }
+
+      :global(.a-button) {
+        min-height: 2.5rem;
+        white-space: nowrap;
+      }
+    }
+
     > .empty {
       padding: 1rem;
       border-radius: var(--radius);
@@ -145,6 +213,11 @@
         p {
           text-align: start;
         }
+      }
+
+      .pagination-guard {
+        align-items: stretch;
+        flex-direction: column;
       }
     }
   }
