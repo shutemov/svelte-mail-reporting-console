@@ -173,6 +173,10 @@
       .last-report {
         display: grid;
         gap: 0.25rem;
+        min-width: 10rem;
+        border-radius: var(--radius-sm);
+        padding: 0.625rem 0.75rem;
+        background: rgba(255, 255, 255, 0.56);
         text-align: right;
 
         span {
@@ -184,12 +188,20 @@
     > .metrics {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 0.75rem;
+      gap: 0.5rem;
+      padding: 0.75rem;
+      border-radius: var(--radius);
+      background: color-mix(in srgb, var(--surface-muted) 72%, #ffffff);
+
+      :global(.m-metric-card) {
+        min-height: 6.25rem;
+        background: rgba(255, 255, 255, 0.72);
+      }
     }
 
     > .breakdown,
     .history-grid > article {
-      background: var(--surface);
+      background: color-mix(in srgb, var(--surface-muted) 72%, #ffffff);
       border-radius: var(--radius);
       padding: 1rem;
     }
@@ -212,7 +224,7 @@
       span {
         border-radius: var(--radius-sm);
         padding: 0.875rem;
-        background: var(--surface-raised);
+        background: rgba(255, 255, 255, 0.72);
         color: var(--text-muted);
       }
 
@@ -239,7 +251,7 @@
 
       ul {
         display: grid;
-        gap: var(--space-2);
+        gap: 0.5rem;
         list-style: none;
         margin: 0;
         padding: 0;
@@ -247,9 +259,10 @@
 
       li {
         display: grid;
-        gap: 0.2rem;
-        border-bottom: 1px solid var(--border-soft);
-        padding-bottom: 0.5rem;
+        gap: 0.25rem;
+        border-radius: var(--radius-sm);
+        padding: 0.75rem;
+        background: rgba(255, 255, 255, 0.72);
 
         span,
         small {
