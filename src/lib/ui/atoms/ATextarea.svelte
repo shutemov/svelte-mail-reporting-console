@@ -2,9 +2,10 @@
   export let name = '';
   export let value = '';
   export let rows = 4;
+  export let placeholder = '';
 </script>
 
-<textarea class="a-textarea" {name} {rows}>{value}</textarea>
+<textarea class="a-textarea" {name} {rows} {placeholder}>{value}</textarea>
 
 <style lang="scss">
   .a-textarea {
@@ -16,5 +17,9 @@
     min-height: 6rem;
     background: white;
     color: var(--text);
+
+    &::placeholder {
+      color: color-mix(in srgb, var(--text-muted) 76%, white);
+    }
   }
 </style>

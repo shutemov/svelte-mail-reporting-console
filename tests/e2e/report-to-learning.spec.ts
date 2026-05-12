@@ -24,12 +24,8 @@ test('primary report-to-learning workflow', async ({ page }) => {
   await page.goto('/employee/report');
   await page.getByLabel('Sender').fill('phisher@example.com');
   await page.getByLabel('Subject').fill('Verify account now');
-  await page.locator('input[name="receivedAt"]').evaluate((node) => {
-    const input = node as HTMLInputElement;
-    input.value = '2026-01-11T15:30';
-    input.dispatchEvent(new Event('input', { bubbles: true }));
-    input.dispatchEvent(new Event('change', { bubbles: true }));
-  });
+  await page.getByLabel('Received date').fill('11.01.2026');
+  await page.getByLabel('Received time').fill('15:30');
   await page.getByLabel('Reason').fill('Sender requested password reset on external domain.');
   await page.locator('input[name="riskyActions"][value="entered_credentials"]').check();
   await page.getByRole('button', { name: 'Submit report' }).click();

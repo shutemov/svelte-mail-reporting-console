@@ -4,6 +4,7 @@
   import AInput from '$lib/ui/atoms/AInput.svelte';
   import ATextarea from '$lib/ui/atoms/ATextarea.svelte';
   import AErrorMessage from '$lib/ui/atoms/AErrorMessage.svelte';
+  import MDateTimePicker from '$lib/ui/molecules/MDateTimePicker.svelte';
   import MField from '$lib/ui/molecules/MField.svelte';
   import MRiskyActionGroup from '$lib/ui/molecules/MRiskyActionGroup.svelte';
 
@@ -11,35 +12,28 @@
   export let fieldErrors: Record<string, string> = {};
   export let formError = '';
 
-  const getDateInputValue = (iso?: string) => {
-    if (!iso) return '';
-    const dt = new Date(iso);
-    if (Number.isNaN(dt.getTime())) return '';
-    return new Date(dt.getTime() - dt.getTimezoneOffset() * 60000)
-      .toISOString()
-      .slice(0, 16);
-  };
 </script>
 
 <form method="POST" class="o-report-form">
   <MField label="Sender" error={fieldErrors.sender}>
-    <AInput name="sender" value={values.sender ?? ''} />
+    <AInput name="sender" value={values.sender ?? ''} placeholder="security@example.com" />
   </MField>
 
   <MField label="Subject" error={fieldErrors.subject}>
-    <AInput name="subject" value={values.subject ?? ''} />
+    <AInput name="subject" value={values.subject ?? ''} placeholder="Password reset request" />
   </MField>
 
   <MField label="Received date" error={fieldErrors.receivedAt}>
-    <AInput
-      name="receivedAt"
-      type="datetime-local"
-      value={getDateInputValue(values.receivedAt)}
-    />
+    <MDateTimePicker name="receivedAt" value={values.receivedAt ?? ''} />
   </MField>
 
   <MField label="Reason" error={fieldErrors.reason}>
-    <ATextarea name="reason" value={values.reason ?? ''} rows={4} />
+    <ATextarea
+      name="reason"
+      value={values.reason ?? ''}
+      placeholder="What looked suspicious, unusual, or risky?"
+      rows={4}
+    />
   </MField>
 
   <MField label="Risky actions" error={fieldErrors.riskyActions}>
@@ -47,7 +41,12 @@
   </MField>
 
   <MField label="Message preview" error={fieldErrors.messagePreview}>
-    <ATextarea name="messagePreview" value={values.messagePreview ?? ''} rows={6} />
+    <ATextarea
+      name="messagePreview"
+      value={values.messagePreview ?? ''}
+      placeholder="Paste the relevant message excerpt, headers, or visible links."
+      rows={6}
+    />
   </MField>
 
   <AErrorMessage message={formError} />
