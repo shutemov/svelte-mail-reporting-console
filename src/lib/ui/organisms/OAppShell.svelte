@@ -56,6 +56,8 @@
       </span>
     </a>
 
+    <MDemoRoleSwitcher {users} {currentUserId} />
+
     <div class="role-card">
       <span>{workspaceLabel}</span>
       <b>{userName}</b>
@@ -91,7 +93,9 @@
         <span>/ inbound-mail-demo</span>
       </div>
 
-      <MDemoRoleSwitcher {users} {currentUserId} />
+      <div class="mobile-role-switch">
+        <MDemoRoleSwitcher {users} {currentUserId} />
+      </div>
     </header>
 
     <nav class="mobile-tabs" aria-label="Mobile navigation">
@@ -166,6 +170,10 @@
           font-size: 0.75rem;
           line-height: 1.3;
         }
+      }
+
+      > :global(.m-demo-role-switcher) {
+        margin-top: -0.75rem;
       }
 
       > .role-card,
@@ -251,6 +259,11 @@
             font-weight: 500;
           }
         }
+
+        > .mobile-role-switch {
+          display: none;
+          width: min(17.5rem, 100%);
+        }
       }
 
       > .mobile-tabs {
@@ -296,6 +309,10 @@
       > .workspace {
         > .topbar {
           position: static;
+
+          > .mobile-role-switch {
+            display: block;
+          }
         }
 
         > .mobile-tabs {
@@ -305,6 +322,13 @@
           padding: 0.75rem 1.125rem 0;
           scrollbar-width: none;
         }
+      }
+    }
+
+    @media (max-width: 760px) {
+      > .workspace > .topbar {
+        align-items: flex-start;
+        flex-direction: column;
       }
     }
   }
