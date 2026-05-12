@@ -117,26 +117,42 @@
 <style lang="scss">
   .o-employee-profile-details {
     display: grid;
-    gap: var(--space-4);
+    gap: 0.875rem;
 
     > .hero {
+      position: relative;
       display: flex;
       justify-content: space-between;
-      gap: var(--space-4);
+      gap: 1rem;
       align-items: end;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: 0.5rem solid #27713f;
-      border-radius: var(--radius);
-      padding: var(--space-4);
-      box-shadow: var(--shadow);
+      overflow: hidden;
+      border-radius: var(--radius-md);
+      padding: 0.875rem 1rem 0.875rem 1.25rem;
+      background: linear-gradient(180deg, color-mix(in srgb, #27713f 7%, #ffffff), #ffffff 58%);
+
+      &::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        width: 5px;
+        background: #27713f;
+      }
 
       &.yellow {
-        border-left-color: #b7791f;
+        background: linear-gradient(180deg, color-mix(in srgb, #b7791f 8%, #ffffff), #ffffff 58%);
+
+        &::before {
+          background: #b7791f;
+        }
       }
 
       &.red {
-        border-left-color: #b42318;
+        background: linear-gradient(180deg, color-mix(in srgb, #b42318 8%, #ffffff), #ffffff 58%);
+
+        &::before {
+          background: #b42318;
+        }
       }
 
       h2,
@@ -145,7 +161,8 @@
       }
 
       h2 {
-        font-size: 1.8rem;
+        font-size: 1.625rem;
+        line-height: 1.12;
       }
 
       .eyebrow {
@@ -167,37 +184,35 @@
     > .metrics {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: var(--space-3);
+      gap: 0.75rem;
     }
 
     > .breakdown,
     .history-grid > article {
       background: var(--surface);
-      border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: var(--space-4);
-      box-shadow: var(--shadow);
+      padding: 1rem;
     }
 
     > .breakdown {
       display: grid;
-      gap: var(--space-3);
+      gap: 0.875rem;
 
       h2 {
         margin: 0;
+        font-size: 1.375rem;
       }
 
       > div {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: var(--space-3);
+        gap: 0.5rem;
       }
 
       span {
-        border: 1px solid var(--border);
         border-radius: var(--radius-sm);
-        padding: var(--space-3);
-        background: var(--surface-muted);
+        padding: 0.875rem;
+        background: var(--surface-raised);
         color: var(--text-muted);
       }
 
@@ -211,10 +226,11 @@
     > .history-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--space-3);
+      gap: 0.875rem;
 
       h2 {
-        margin: 0 0 var(--space-3);
+        margin: 0 0 0.875rem;
+        font-size: 1.375rem;
       }
 
       p {
@@ -232,8 +248,8 @@
       li {
         display: grid;
         gap: 0.2rem;
-        border-bottom: 1px solid var(--border);
-        padding-bottom: var(--space-2);
+        border-bottom: 1px solid var(--border-soft);
+        padding-bottom: 0.5rem;
 
         span,
         small {
