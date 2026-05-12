@@ -8,7 +8,7 @@
 <section class="o-employee-risk-cards">
   <div class="heading">
     <h2>Employee risk profiles</h2>
-    <p>Alice and Bob have full profile drill-down. Synthetic teammates provide organization-wide signal.</p>
+    <p>Open any employee profile to inspect reports, alerts, risk signals, and learning follow-up.</p>
   </div>
 
   <div class="cards">

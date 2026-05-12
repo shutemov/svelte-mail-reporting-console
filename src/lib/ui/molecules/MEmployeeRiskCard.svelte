@@ -3,54 +3,31 @@
 
   export let summary: EmployeeProfileSummary;
 
-  $: href = summary.user.profileEnabled ? `/admin/employees/${summary.user.id}` : '';
+  $: href = `/admin/employees/${summary.user.id}`;
   $: cardLabel = `${summary.user.name}: ${summary.riskStatusLabel}`;
 </script>
 
-{#if href}
-  <a class="m-employee-risk-card {summary.riskStatus}" {href} aria-label={cardLabel}>
-    <div class="heading">
-      <div>
-        <h3>{summary.user.name}</h3>
-        <p>{summary.user.persona?.replaceAll('_', ' ') ?? 'employee'}</p>
-      </div>
-      <span class="status">{summary.riskStatusLabel}</span>
+<a class="m-employee-risk-card {summary.riskStatus}" {href} aria-label={cardLabel}>
+  <div class="heading">
+    <div>
+      <h3>{summary.user.name}</h3>
+      <p>{summary.user.persona?.replaceAll('_', ' ') ?? 'employee'}</p>
     </div>
+    <span class="status">{summary.riskStatusLabel}</span>
+  </div>
 
-    <div class="metrics">
-      <span><strong>{summary.totalReports}</strong> reports</span>
-      <span><strong>{summary.highRiskReports}</strong> risky</span>
-      <span><strong>{summary.openAlerts}</strong> open</span>
-      <span><strong>{summary.learningCompletionRate}%</strong> learning</span>
-    </div>
+  <div class="metrics">
+    <span><strong>{summary.totalReports}</strong> reports</span>
+    <span><strong>{summary.highRiskReports}</strong> risky</span>
+    <span><strong>{summary.openAlerts}</strong> open</span>
+    <span><strong>{summary.learningCompletionRate}%</strong> learning</span>
+  </div>
 
-    <p class="reason">
-      Clicks {summary.clickedLinkCount} &middot; Attachments {summary.downloadedAttachmentCount} &middot; Credentials
-      {summary.enteredCredentialsCount}
-    </p>
-  </a>
-{:else}
-  <article class="m-employee-risk-card {summary.riskStatus} summary-only" aria-label={cardLabel}>
-    <div class="heading">
-      <div>
-        <h3>{summary.user.name}</h3>
-        <p>{summary.user.persona?.replaceAll('_', ' ') ?? 'employee'}</p>
-      </div>
-      <span class="status">{summary.riskStatusLabel}</span>
-    </div>
-
-    <div class="metrics">
-      <span><strong>{summary.totalReports}</strong> reports</span>
-      <span><strong>{summary.highRiskReports}</strong> risky</span>
-      <span><strong>{summary.openAlerts}</strong> open</span>
-      <span><strong>{summary.learningCompletionRate}%</strong> learning</span>
-    </div>
-
-    <p class="reason">
-      Summary only &middot; Clicks {summary.clickedLinkCount} &middot; Attachments {summary.downloadedAttachmentCount}
-    </p>
-  </article>
-{/if}
+  <p class="reason">
+    Clicks {summary.clickedLinkCount} &middot; Attachments {summary.downloadedAttachmentCount} &middot; Credentials
+    {summary.enteredCredentialsCount}
+  </p>
+</a>
 
 <style lang="scss">
   .m-employee-risk-card {
@@ -74,13 +51,9 @@
       border-left-color: #b42318;
     }
 
-    &:not(.summary-only):hover {
+    &:hover {
       transform: translateY(-1px);
       background: var(--employee-tint);
-    }
-
-    &.summary-only {
-      background: var(--surface-muted);
     }
 
     > .heading {

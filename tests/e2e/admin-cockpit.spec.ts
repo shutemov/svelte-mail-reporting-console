@@ -33,11 +33,12 @@ test('admin cockpit shows simulation snapshot and employee cards', async ({ page
 
   await expect(page.getByRole('link', { name: /Alice Employee/ })).toBeVisible();
   await expect(page.getByRole('link', { name: /Bob Employee/ })).toBeVisible();
-  await expect(page.getByRole('link', { name: /Carol Finance/ })).toHaveCount(0);
-  await expect(page.getByText('Summary only')).toHaveCount(8);
+  await expect(page.getByRole('link', { name: /Carol Finance/ })).toBeVisible();
+  await expect(page.getByRole('link', { name: /Julia Operations/ })).toBeVisible();
+  await expect(page.getByText('Summary only')).toHaveCount(0);
 });
 
-test('profile-enabled employees have details and summary-only employees do not', async ({ page }) => {
+test('all employee profile cards open profile details', async ({ page }) => {
   await reset(page, 'default');
   await asAdmin(page);
 
@@ -49,8 +50,12 @@ test('profile-enabled employees have details and summary-only employees do not',
   await expect(page.getByRole('heading', { name: 'Risk action breakdown' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Reports' })).toBeVisible();
 
-  const response = await page.goto('/admin/employees/employee-3');
-  expect(response?.status()).toBe(404);
+  await page.goto('/admin');
+  await page.getByRole('link', { name: /Carol Finance/ }).click();
+
+  await expect(page).toHaveURL(/\/admin\/employees\/employee-3$/);
+  await expect(page.getByRole('heading', { name: 'Employee profile' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Reports' })).toBeVisible();
 });
 
 test('inject once updates dashboard workload and employee summaries', async ({ page }) => {
