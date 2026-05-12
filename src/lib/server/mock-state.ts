@@ -31,70 +31,60 @@ function baseUsers(): DemoUser[] {
       id: 'employee-1',
       role: 'employee',
       name: 'Alice Employee',
-      profileEnabled: true,
       persona: 'careful_reporter'
     },
     {
       id: 'employee-2',
       role: 'employee',
       name: 'Bob Employee',
-      profileEnabled: true,
       persona: 'credential_risk'
     },
     {
       id: 'employee-3',
       role: 'employee',
       name: 'Carol Finance',
-      profileEnabled: false,
       persona: 'finance_target'
     },
     {
       id: 'employee-4',
       role: 'employee',
       name: 'Dan Manager',
-      profileEnabled: false,
       persona: 'manager'
     },
     {
       id: 'employee-5',
       role: 'employee',
       name: 'Eva Assistant',
-      profileEnabled: false,
       persona: 'assistant'
     },
     {
       id: 'employee-6',
       role: 'employee',
       name: 'Frank Sales',
-      profileEnabled: false,
       persona: 'frequent_clicker'
     },
     {
       id: 'employee-7',
       role: 'employee',
       name: 'Grace HR',
-      profileEnabled: false,
       persona: 'hr'
     },
     {
       id: 'employee-8',
       role: 'employee',
       name: 'Helen Legal',
-      profileEnabled: false,
       persona: 'attachment_opener'
     },
     {
       id: 'employee-9',
       role: 'employee',
       name: 'Ivan Support',
-      profileEnabled: false,
       persona: 'support'
     },
     {
       id: 'employee-10',
       role: 'employee',
       name: 'Julia Operations',
-      profileEnabled: false,
       persona: 'operations'
     },
     { id: 'admin-1', role: 'admin', name: 'Ada Admin' },
