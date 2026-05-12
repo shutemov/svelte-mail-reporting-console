@@ -26,6 +26,8 @@ test('admin cockpit shows simulation snapshot and employee cards', async ({ page
   await expect(page.getByRole('heading', { name: 'Employee risk profiles' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Simulation snapshot' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Open simulation console' })).toBeVisible();
+  await expect(page.getByLabel('Suspicious mail workflow guide').getByRole('listitem')).toHaveCount(6);
+  await expect(page.getByRole('link', { name: /1\. Simulate/ })).toHaveCount(0);
   await expect(page.getByRole('heading', { name: 'Operator controls' })).toHaveCount(0);
   await expect(page.getByRole('heading', { name: 'Workload profile' })).toHaveCount(0);
 
