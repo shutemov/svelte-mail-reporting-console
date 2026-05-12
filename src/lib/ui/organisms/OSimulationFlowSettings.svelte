@@ -1,7 +1,7 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
   import type { SubmitFunction } from '@sveltejs/kit';
-  import type { SimulationConfig } from '$lib/domains/types';
+  import type { Severity, SimulationConfig } from '$lib/domains/types';
   import AButton from '$lib/ui/atoms/AButton.svelte';
   import ACheckbox from '$lib/ui/atoms/ACheckbox.svelte';
   import AErrorMessage from '$lib/ui/atoms/AErrorMessage.svelte';
@@ -33,6 +33,25 @@
 
   function releaseNumberInputWheel(event: WheelEvent) {
     (event.currentTarget as HTMLInputElement).blur();
+  }
+
+  function changeSeverityByWheel(event: WheelEvent, severity: Severity) {
+    event.preventDefault();
+
+    const input = event.currentTarget as HTMLInputElement;
+    const current = Number(input.value);
+    const min = Number(input.min);
+    const max = Number(input.max);
+    const step = event.shiftKey ? 5 : 1;
+    const direction = event.deltaY < 0 ? 1 : -1;
+    const fallback = Number(values.severityMix[severity]) || 0;
+    const next = Math.min(
+      Number.isFinite(max) ? max : 100,
+      Math.max(Number.isFinite(min) ? min : 0, (Number.isFinite(current) ? current : fallback) + direction * step)
+    );
+
+    values.severityMix[severity] = next;
+    values.severityMix = { ...values.severityMix };
   }
 
   const enhanceSettings: SubmitFunction = () => {
@@ -105,8 +124,8 @@
             type="number"
             min="0"
             max="100"
-            value={values.severityMix.low}
-            on:wheel={releaseNumberInputWheel}
+            bind:value={values.severityMix.low}
+            on:wheel={(event) => changeSeverityByWheel(event, 'low')}
           />
           <AErrorMessage message={errors['severityMix.low'] ?? ''} />
         </label>
@@ -117,8 +136,8 @@
             type="number"
             min="0"
             max="100"
-            value={values.severityMix.medium}
-            on:wheel={releaseNumberInputWheel}
+            bind:value={values.severityMix.medium}
+            on:wheel={(event) => changeSeverityByWheel(event, 'medium')}
           />
           <AErrorMessage message={errors['severityMix.medium'] ?? ''} />
         </label>
@@ -129,8 +148,8 @@
             type="number"
             min="0"
             max="100"
-            value={values.severityMix.high}
-            on:wheel={releaseNumberInputWheel}
+            bind:value={values.severityMix.high}
+            on:wheel={(event) => changeSeverityByWheel(event, 'high')}
           />
           <AErrorMessage message={errors['severityMix.high'] ?? ''} />
         </label>
@@ -141,8 +160,8 @@
             type="number"
             min="0"
             max="100"
-            value={values.severityMix.critical}
-            on:wheel={releaseNumberInputWheel}
+            bind:value={values.severityMix.critical}
+            on:wheel={(event) => changeSeverityByWheel(event, 'critical')}
           />
           <AErrorMessage message={errors['severityMix.critical'] ?? ''} />
         </label>
