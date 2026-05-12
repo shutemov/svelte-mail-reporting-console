@@ -82,15 +82,16 @@
       {/each}
     </ol>
 
-    <aside class="tour-card" aria-label="Guided tour step">
+    <aside class="action-panel" aria-label="Recommended next actions">
       <div>
-        <div class="tour-progress">Step 1 of 6</div>
-        <h2>Start simulation load</h2>
-        <p>Synthetic reports enter the same queue as employee submissions.</p>
+        <div class="panel-kicker">Recommended next actions</div>
+        <h2>Run the demo loop from any point.</h2>
+        <p>Use simulation to create load, queue to triage alerts, and learning to close follow-up.</p>
       </div>
-      <div class="tour-actions">
+      <div class="panel-actions">
         <a class="outline-link" href="/admin/simulation">Open simulation</a>
         <a class="solid-link" href="/admin/alerts">Prioritize queue</a>
+        <a class="outline-link" href="/employee/learning">Review learning</a>
       </div>
     </aside>
   </section>
@@ -184,7 +185,7 @@
     }
 
     .cockpit-status,
-    .tour-actions {
+    .panel-actions {
       display: flex;
       align-items: center;
       justify-content: end;
@@ -251,7 +252,7 @@
       }
     }
 
-    .tour-card {
+    .action-panel {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
       align-items: center;
@@ -271,7 +272,7 @@
       }
     }
 
-    .tour-progress {
+    .panel-kicker {
       color: var(--text-muted);
       font: 400 0.6875rem/1.4 var(--font-mono);
       text-transform: uppercase;
@@ -424,7 +425,7 @@
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
-      .tour-card {
+      .action-panel {
         grid-template-columns: 1fr;
       }
 
