@@ -19,12 +19,12 @@
     : '-';
 
   const tourSteps = [
-    { label: '1. Simulate', detail: 'create load', href: '/admin/simulation' },
-    { label: '2. Queue', detail: 'pick case', href: '/admin/alerts' },
-    { label: '3. Evidence', detail: 'inspect signals', href: '/admin/alerts' },
-    { label: '4. Resolve', detail: 'safe/malicious', href: '/admin/alerts' },
-    { label: '5. Evaluate', detail: 'quality result', href: '/admin/simulation' },
-    { label: '6. Learn', detail: 'close loop', href: '/employee/learning' }
+    { label: '1. Simulate', detail: 'Generate realistic mail load' },
+    { label: '2. Queue', detail: 'Prioritize incoming alerts' },
+    { label: '3. Evidence', detail: 'Inspect sender and risk signals' },
+    { label: '4. Resolve', detail: 'Mark safe or malicious' },
+    { label: '5. Evaluate', detail: 'Compare decisions with ground truth' },
+    { label: '6. Learn', detail: 'Assign training when needed' }
   ];
 
   async function tickAndRefresh() {
@@ -73,14 +73,14 @@
       </div>
     </div>
 
-    <nav class="tour-rail" aria-label="Primary demo route">
-      {#each tourSteps as step, index (step.label)}
-        <a class="tour-step" class:active={index === 0} href={step.href}>
+    <ol class="tour-rail" aria-label="Suspicious mail workflow guide">
+      {#each tourSteps as step (step.label)}
+        <li class="tour-step">
           <b>{step.label}</b>
           <span>{step.detail}</span>
-        </a>
+        </li>
       {/each}
-    </nav>
+    </ol>
 
     <aside class="tour-card" aria-label="Guided tour step">
       <div>
@@ -219,6 +219,9 @@
       display: grid;
       grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 0.5rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
     }
 
     .tour-step {
@@ -228,13 +231,6 @@
       background: var(--surface-raised);
       color: var(--text-soft);
       text-align: start;
-      text-decoration: none;
-
-      &:hover,
-      &.active {
-        color: var(--accent);
-        background: #dcecff;
-      }
 
       b,
       span {
@@ -244,6 +240,7 @@
       b {
         font-size: 0.75rem;
         font-weight: 500;
+        color: var(--text);
       }
 
       span {
