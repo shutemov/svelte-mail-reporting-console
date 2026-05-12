@@ -4,12 +4,9 @@
   import { tickSimulation } from '$lib/client/tick-simulation';
   import ODashboardSummary from '$lib/ui/organisms/ODashboardSummary.svelte';
   import OEmployeeRiskCards from '$lib/ui/organisms/OEmployeeRiskCards.svelte';
-  import OSimulationControlPanel from '$lib/ui/organisms/OSimulationControlPanel.svelte';
-  import OSimulationFlowSettings from '$lib/ui/organisms/OSimulationFlowSettings.svelte';
-  import type { ActionData, PageData } from './$types';
+  import type { PageData } from './$types';
 
   export let data: PageData;
-  export let form: ActionData;
 
   let ticking = false;
 
@@ -104,12 +101,41 @@
       <OEmployeeRiskCards summaries={data.employeeSummaries} />
     </div>
 
-    <aside class="simulation-sidebar" aria-label="Simulation controls">
-      <OSimulationControlPanel
-        session={simulationSummary.session}
-        formError={form?.formError ?? ''}
-      />
-      <OSimulationFlowSettings config={simulationSummary.session.config} {form} />
+    <aside class="simulation-sidebar" aria-label="Simulation snapshot">
+      <section class="simulation-snapshot">
+        <div class="snapshot-head">
+          <div>
+            <p class="eyebrow">Simulation session</p>
+            <h2>Simulation snapshot</h2>
+          </div>
+          <span class:running={simulationSummary.session.mode === 'running'}>
+            {simulationSummary.session.mode}
+          </span>
+        </div>
+
+        <div class="snapshot-grid">
+          <div aria-label="Generated cases">
+            <b>{simulationSummary.session.generatedCount}</b>
+            <span>Generated cases</span>
+          </div>
+          <div aria-label="Last case">
+            <b>{lastGenerated}</b>
+            <span>Last case</span>
+          </div>
+          <div aria-label="Current rate">
+            <b>{simulationSummary.session.config.ratePerMinute}/m</b>
+            <span>Current rate</span>
+          </div>
+          <div aria-label="Malicious mix">
+            <b>{Math.round(simulationSummary.session.config.maliciousRatio * 100)}%</b>
+            <span>Malicious mix</span>
+          </div>
+        </div>
+
+        <p>Use the dedicated simulation console to start, pause, inject, reset, and tune generated workload.</p>
+
+        <a class="solid-link" href="/admin/simulation">Open simulation console</a>
+      </section>
     </aside>
   </div>
 </section>
@@ -303,6 +329,88 @@
     .simulation-sidebar {
       position: sticky;
       top: 5rem;
+    }
+
+    .simulation-snapshot {
+      display: grid;
+      gap: 0.875rem;
+      padding: 1rem;
+      border-radius: var(--radius);
+      background: var(--surface);
+
+      > p {
+        color: var(--text-muted);
+        font-size: 0.875rem;
+        line-height: 1.45;
+      }
+
+      > .solid-link {
+        width: 100%;
+      }
+    }
+
+    .snapshot-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+
+      .eyebrow {
+        color: var(--text-muted);
+        font: 400 0.75rem/1.4 var(--font-mono);
+        text-transform: uppercase;
+      }
+
+      h2 {
+        margin-top: 0.25rem;
+        font-size: 1.375rem;
+      }
+
+      > span {
+        min-height: 1.75rem;
+        padding: 0.3125rem 0.625rem;
+        border-radius: 999px;
+        background: var(--surface-raised);
+        color: var(--text-muted);
+        font-size: 0.75rem;
+        font-weight: 500;
+
+        &.running {
+          background: var(--admin-tint);
+          color: var(--admin-primary);
+        }
+      }
+    }
+
+    .snapshot-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.5rem;
+
+      > div {
+        min-height: 4rem;
+        padding: 0.75rem;
+        border-radius: var(--radius-sm);
+        background: var(--surface-raised);
+      }
+
+      b,
+      span {
+        display: block;
+      }
+
+      b {
+        font-family: var(--font-display);
+        font-size: 1.375rem;
+        font-weight: 400;
+        line-height: 1;
+      }
+
+      span {
+        margin-top: 0.25rem;
+        color: var(--text-muted);
+        font-size: 0.75rem;
+      }
     }
 
     @media (max-width: 1100px) {
