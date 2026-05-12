@@ -46,7 +46,9 @@
     </ASelect>
 
     <AInput name="reporterId" value={filters.reporterId ?? ''} placeholder="Reporter ID" />
-    <AButton type="submit" variant="secondary">Apply filters</AButton>
+    <div class="filter-action">
+      <AButton type="submit" variant="secondary">Apply filters</AButton>
+    </div>
   </form>
 
   {#if items.length === 0}
@@ -97,11 +99,23 @@
 
     > .filters {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(8.75rem, auto);
+      align-items: center;
       gap: 0.5rem;
       padding: 1rem;
       border-radius: var(--radius);
       background: var(--surface);
+
+      > .filter-action {
+        display: flex;
+        align-self: stretch;
+
+        :global(.a-button) {
+          width: 100%;
+          min-height: 2.75rem;
+          border: 1px solid var(--border);
+        }
+      }
     }
 
     > .list {
@@ -120,6 +134,10 @@
     }
 
     @media (max-width: 760px) {
+      > .filters {
+        grid-template-columns: 1fr;
+      }
+
       > .queue-viewbar {
         align-items: flex-start;
         flex-direction: column;
