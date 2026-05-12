@@ -57,7 +57,9 @@
 <style lang="scss">
   .o-report-form {
     display: grid;
-    gap: 1rem;
-    max-width: 720px;
+    gap: 0.875rem;
+    padding: 1rem;
+    border-radius: var(--radius);
+    background: var(--surface);
   }
 </style>
