@@ -21,11 +21,14 @@
 <style lang="scss">
   .o-employee-risk-cards {
     display: grid;
-    gap: var(--space-3);
+    gap: 0.75rem;
+    padding: 1rem;
+    border-radius: var(--radius);
+    background: var(--surface);
 
     > .heading {
       display: grid;
-      gap: var(--space-1);
+      gap: 0.25rem;
 
       h2,
       p {
@@ -34,13 +37,14 @@
 
       p {
         color: var(--text-muted);
+        font-size: 0.875rem;
       }
     }
 
     > .cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: var(--space-3);
+      gap: 0.75rem;
     }
   }
 </style>

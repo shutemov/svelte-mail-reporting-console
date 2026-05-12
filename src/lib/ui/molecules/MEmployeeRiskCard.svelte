@@ -55,15 +55,15 @@
 <style lang="scss">
   .m-employee-risk-card {
     display: grid;
-    gap: var(--space-3);
+    gap: 0.75rem;
     min-height: 12.5rem;
     text-decoration: none;
     color: inherit;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-left: 0.45rem solid #27713f;
-    border-radius: var(--radius);
-    padding: var(--space-4);
+    background: var(--surface-raised);
+    border: 0;
+    border-left: 0.35rem solid var(--employee-primary);
+    border-radius: var(--radius-md);
+    padding: 0.875rem;
     box-shadow: var(--shadow);
 
     &.yellow {
@@ -76,7 +76,7 @@
 
     &:not(.summary-only):hover {
       transform: translateY(-1px);
-      border-color: #8ab4e6;
+      background: var(--employee-tint);
     }
 
     &.summary-only {
@@ -101,6 +101,7 @@
       p {
         margin-top: 0.2rem;
         color: var(--text-muted);
+        font-size: 0.8125rem;
         text-transform: capitalize;
       }
     }
@@ -111,8 +112,8 @@
       padding: 0.25rem 0.55rem;
       background: #edf8f0;
       color: #27713f;
-      font-weight: 700;
-      font-size: 0.78rem;
+      font-weight: 500;
+      font-size: 0.75rem;
     }
 
     &.yellow .status {
@@ -136,7 +137,7 @@
         padding: 0.55rem;
         background: white;
         color: var(--text-muted);
-        font-size: 0.85rem;
+        font-size: 0.8125rem;
       }
 
       strong {
@@ -150,7 +151,7 @@
       margin: 0;
       color: var(--text-muted);
       line-height: 1.35;
-      font-size: 0.88rem;
+      font-size: 0.8125rem;
     }
   }
 </style>
