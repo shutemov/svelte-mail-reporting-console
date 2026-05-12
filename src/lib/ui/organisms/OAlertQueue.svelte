@@ -10,6 +10,14 @@
 </script>
 
 <section class="o-alert-queue">
+  <div class="queue-viewbar" aria-label="Queue view presets">
+    <div>
+      <span>Queue view</span>
+      <b>{items.length} alerts in current view</b>
+    </div>
+    <p>Prioritize by severity, risky action, age, and evidence.</p>
+  </div>
+
   <form method="GET" class="filters">
     <ASelect name="status" value={filters.status ?? ''}>
       <option value="">All statuses</option>
@@ -42,7 +50,7 @@
   </form>
 
   {#if items.length === 0}
-    <p>No alerts found for current filter.</p>
+    <p class="empty">No alerts found for current filter.</p>
   {:else}
     <div class="list">
       {#each items as item (item.alert.id)}
@@ -54,16 +62,72 @@
 
 <style lang="scss">
   .o-alert-queue {
+    display: grid;
+    gap: 0.875rem;
+
+    > .queue-viewbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem;
+      border-radius: var(--radius);
+      background: var(--surface);
+
+      span {
+        color: var(--text-muted);
+        font: 400 0.6875rem/1.4 var(--font-mono);
+        text-transform: uppercase;
+      }
+
+      b {
+        display: block;
+        margin-top: 0.25rem;
+        font-size: 1.125rem;
+        font-weight: 500;
+      }
+
+      p {
+        max-width: 34rem;
+        color: var(--text-muted);
+        font-size: 0.875rem;
+        text-align: end;
+      }
+    }
+
     > .filters {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 0.6rem;
-      margin-bottom: 1rem;
+      gap: 0.5rem;
+      padding: 1rem;
+      border-radius: var(--radius);
+      background: var(--surface);
     }
 
     > .list {
       display: grid;
-      gap: 0.75rem;
+      gap: 0.5rem;
+      padding: 0.75rem;
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    > .empty {
+      padding: 1rem;
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 760px) {
+      > .queue-viewbar {
+        align-items: flex-start;
+        flex-direction: column;
+
+        p {
+          text-align: start;
+        }
+      }
     }
   }
 </style>
