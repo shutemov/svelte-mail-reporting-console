@@ -22,3 +22,15 @@ test('admin alert filters survive reload via URL params', async ({ page }) => {
   await expect(page).toHaveURL(/severity=high/);
   await expect(page.getByText('Urgent action required')).toBeVisible();
 });
+
+test('admin alert filters apply from queue form with empty fields', async ({ page }) => {
+  await page.request.post('/api/test/reset', { data: { seed: 'default' } });
+  await asAdmin(page);
+
+  await page.goto('/admin/alerts');
+  await page.getByRole('combobox').nth(1).selectOption('high');
+  await page.getByRole('button', { name: 'Apply filters' }).click();
+
+  await expect(page).toHaveURL(/severity=high/);
+  await expect(page.getByText('Urgent action required')).toBeVisible();
+});

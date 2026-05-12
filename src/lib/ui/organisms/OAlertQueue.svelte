@@ -18,7 +18,7 @@
     <p>Prioritize by severity, risky action, age, and evidence.</p>
   </div>
 
-  <form method="GET" class="filters">
+  <form method="GET" action="/admin/alerts" class="filters">
     <ASelect name="status" value={filters.status ?? ''}>
       <option value="">All statuses</option>
       <option value="new">New</option>

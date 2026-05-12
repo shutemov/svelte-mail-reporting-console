@@ -2,11 +2,16 @@ import { alertListQuerySchema } from '$lib/domains/schemas';
 import type { AlertListQuery } from '$lib/domains/types';
 
 export function parseAlertListQuery(searchParams: URLSearchParams): AlertListQuery {
+  const optionalParam = (name: string) => {
+    const value = searchParams.get(name)?.trim();
+    return value ? value : undefined;
+  };
+
   const payload = {
-    status: searchParams.get('status') ?? undefined,
-    severity: searchParams.get('severity') ?? undefined,
-    reporterId: searchParams.get('reporterId') ?? undefined,
-    riskyAction: searchParams.get('riskyAction') ?? undefined
+    status: optionalParam('status'),
+    severity: optionalParam('severity'),
+    reporterId: optionalParam('reporterId'),
+    riskyAction: optionalParam('riskyAction')
   };
 
   const parsed = alertListQuerySchema.safeParse(payload);
