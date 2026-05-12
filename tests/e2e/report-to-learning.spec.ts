@@ -39,15 +39,15 @@ test('primary report-to-learning workflow', async ({ page }) => {
   await switchRole(page, 'admin-1');
   await page.goto('/admin/alerts');
   await page.getByRole('link', { name: 'Verify account now' }).click();
-  await page.getByRole('button', { name: 'Resolve as malicious' }).click();
-  await page.getByRole('button', { name: 'Assign phishing basics' }).click();
+  await page.getByRole('button', { name: 'Resolve malicious' }).click();
+  await page.getByRole('button', { name: 'Assign follow-up learning' }).click();
 
   await switchRole(page, 'employee-1');
   await page.goto('/employee/learning');
-  await page.getByRole('link', { name: 'Phishing Basics' }).click();
+  await page.getByRole('link', { name: /Phishing basics/i }).click();
   await page.getByRole('button', { name: 'Mark as completed' }).click();
 
   await switchRole(page, 'admin-1');
   await page.goto('/admin');
-  await expect(page.getByText('Learning completion (%)')).toBeVisible();
+  await expect(page.locator('.metric-group.remediation').getByText('100%')).toBeVisible();
 });
