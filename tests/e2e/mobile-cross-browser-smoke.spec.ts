@@ -15,12 +15,12 @@ test('mobile and cross-browser smoke paths', async ({ page }) => {
   await page.request.post('/api/test/reset', { data: { seed: 'default' } });
 
   await page.goto('/employee/report');
-  await expect(page.getByRole('heading', { name: 'Report suspicious mail' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Submit a suspicious message.' })).toBeVisible();
 
   await asAdmin(page);
   await page.goto('/admin/alerts');
-  await expect(page.getByRole('heading', { name: 'Alert queue' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Prioritize suspicious mail alerts.' })).toBeVisible();
 
   await page.getByRole('link', { name: 'Urgent action required' }).click();
-  await expect(page.getByRole('heading', { name: 'Alert details' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Urgent action required' })).toBeVisible();
 });

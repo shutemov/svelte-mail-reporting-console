@@ -21,11 +21,11 @@ test('admin cockpit shows simulation controls and employee cards', async ({ page
 
   await page.goto('/admin');
 
-  await expect(page.getByRole('heading', { name: 'Admin dashboard' })).toBeVisible();
-  await expect(page.getByText('Incoming reports 15m')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Suspicious mail operations' })).toBeVisible();
+  await expect(page.getByText('incoming in 15m')).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Employee risk profiles' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Simulation controls' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Flow settings' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Operator controls' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Workload profile' })).toBeVisible();
 
   await expect(page.getByRole('link', { name: /Alice Employee/ })).toBeVisible();
   await expect(page.getByRole('link', { name: /Bob Employee/ })).toBeVisible();
@@ -56,8 +56,8 @@ test('inject once updates dashboard workload and employee summaries', async ({ p
   await page.goto('/admin');
   await page.getByRole('button', { name: 'Inject once' }).click();
 
-  await expect(page.getByText('Mode: paused')).toBeVisible();
-  await expect(page.getByText('Generated:')).toBeVisible();
-  await expect(page.getByText('High-risk reports')).toBeVisible();
+  await expect(page.getByText('paused', { exact: true })).toBeVisible();
+  await expect(page.getByText('Generated', { exact: true })).toBeVisible();
+  await expect(page.getByText('Risky reports')).toBeVisible();
   await expect(page.getByText('1 reports')).toBeVisible();
 });
