@@ -1,10 +1,11 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
   import type { SubmitFunction } from '@sveltejs/kit';
-  import type { SimulationConfig } from '$lib/domains/types';
+  import type { Severity, SimulationConfig } from '$lib/domains/types';
   import AButton from '$lib/ui/atoms/AButton.svelte';
   import ACheckbox from '$lib/ui/atoms/ACheckbox.svelte';
   import AErrorMessage from '$lib/ui/atoms/AErrorMessage.svelte';
+  import MSeverityMixBar from '$lib/ui/molecules/MSeverityMixBar.svelte';
 
   type SimulationForm = {
     success?: boolean;
@@ -30,6 +31,29 @@
   $: errors = form?.fieldErrors ?? {};
   $: expectedVolume = Number(values.ratePerMinute ?? config.ratePerMinute) * 15;
 
+  function releaseNumberInputWheel(event: WheelEvent) {
+    (event.currentTarget as HTMLInputElement).blur();
+  }
+
+  function changeSeverityByWheel(event: WheelEvent, severity: Severity) {
+    event.preventDefault();
+
+    const input = event.currentTarget as HTMLInputElement;
+    const current = Number(input.value);
+    const min = Number(input.min);
+    const max = Number(input.max);
+    const step = event.shiftKey ? 5 : 1;
+    const direction = event.deltaY < 0 ? 1 : -1;
+    const fallback = Number(values.severityMix[severity]) || 0;
+    const next = Math.min(
+      Number.isFinite(max) ? max : 100,
+      Math.max(Number.isFinite(min) ? min : 0, (Number.isFinite(current) ? current : fallback) + direction * step)
+    );
+
+    values.severityMix[severity] = next;
+    values.severityMix = { ...values.severityMix };
+  }
+
   const enhanceSettings: SubmitFunction = () => {
     pending = true;
     saved = false;
@@ -45,9 +69,10 @@
 <section class="o-simulation-flow-settings">
   <div class="heading">
     <div>
-      <h2>Flow settings</h2>
-      <p>Shape the synthetic alert stream while keeping load within MVP-safe guardrails.</p>
+      <p class="eyebrow">Generation settings</p>
+      <h2>Workload profile</h2>
     </div>
+    <span>Affects new synthetic alerts only</span>
 
     <form method="POST" action="?/resetConfigDefaults">
       <AButton type="submit" variant="secondary">Reset to defaults</AButton>
@@ -65,6 +90,7 @@
         min="1"
         max="20"
         value={values.ratePerMinute}
+        on:wheel={releaseNumberInputWheel}
       />
       <small>Controls incoming queue pressure. Guardrail: 1..20 alerts per minute.</small>
       <AErrorMessage message={errors.ratePerMinute ?? ''} />
@@ -79,6 +105,7 @@
         max="1"
         step="0.05"
         value={values.maliciousRatio}
+        on:wheel={releaseNumberInputWheel}
       />
       <small>Higher values make decision quality metrics harsher and more useful.</small>
       <AErrorMessage message={errors.maliciousRatio ?? ''} />
@@ -87,11 +114,19 @@
     <fieldset>
       <legend>Severity mix</legend>
       <p>Percent split for generated alerts. Values must add up to 100%.</p>
+      <MSeverityMixBar mix={values.severityMix} />
 
       <div class="severity-grid">
         <label>
           <span>Low</span>
-          <input name="severityMix.low" type="number" min="0" max="100" value={values.severityMix.low} />
+          <input
+            name="severityMix.low"
+            type="number"
+            min="0"
+            max="100"
+            bind:value={values.severityMix.low}
+            on:wheel={(event) => changeSeverityByWheel(event, 'low')}
+          />
           <AErrorMessage message={errors['severityMix.low'] ?? ''} />
         </label>
         <label>
@@ -101,13 +136,21 @@
             type="number"
             min="0"
             max="100"
-            value={values.severityMix.medium}
+            bind:value={values.severityMix.medium}
+            on:wheel={(event) => changeSeverityByWheel(event, 'medium')}
           />
           <AErrorMessage message={errors['severityMix.medium'] ?? ''} />
         </label>
         <label>
           <span>High</span>
-          <input name="severityMix.high" type="number" min="0" max="100" value={values.severityMix.high} />
+          <input
+            name="severityMix.high"
+            type="number"
+            min="0"
+            max="100"
+            bind:value={values.severityMix.high}
+            on:wheel={(event) => changeSeverityByWheel(event, 'high')}
+          />
           <AErrorMessage message={errors['severityMix.high'] ?? ''} />
         </label>
         <label>
@@ -117,7 +160,8 @@
             type="number"
             min="0"
             max="100"
-            value={values.severityMix.critical}
+            bind:value={values.severityMix.critical}
+            on:wheel={(event) => changeSeverityByWheel(event, 'critical')}
           />
           <AErrorMessage message={errors['severityMix.critical'] ?? ''} />
         </label>
@@ -128,7 +172,7 @@
 
     <label>
       <span>Seed</span>
-      <input name="seed" type="number" step="1" value={values.seed} />
+      <input name="seed" type="number" step="1" value={values.seed} on:wheel={releaseNumberInputWheel} />
       <small>Same seed plus same sequence gives repeatable synthetic reports.</small>
       <AErrorMessage message={errors.seed ?? ''} />
     </label>
@@ -140,7 +184,8 @@
     />
 
     <div class="preview">
-      Preview expected volume: <strong>{expectedVolume}</strong> generated alerts in the next 15 minutes.
+      <strong>Expected volume: {expectedVolume} alerts in next 15 minutes</strong>
+      <span>Current mix follows the saved malicious ratio and severity split.</span>
     </div>
 
     <div class="actions">
@@ -157,51 +202,64 @@
 <style lang="scss">
   .o-simulation-flow-settings {
     background: var(--surface);
-    border: 1px solid var(--border);
+    border: 0;
     border-radius: var(--radius);
-    padding: var(--space-4);
+    padding: 1rem;
     box-shadow: var(--shadow);
 
     > .heading {
       display: flex;
       justify-content: space-between;
-      gap: var(--space-3);
+      gap: 0.75rem;
       align-items: start;
       flex-wrap: wrap;
-      margin-bottom: var(--space-4);
+      margin-bottom: 1rem;
 
       h2,
       p {
         margin: 0;
       }
 
-      p {
-        margin-top: 0.25rem;
+      .eyebrow,
+      > span {
         color: var(--text-muted);
+        font: 400 0.75rem/1.4 var(--font-mono);
+        text-transform: uppercase;
+      }
+
+      h2 {
+        margin-top: 0.25rem;
+        font-size: 1.375rem;
+      }
+
+      > span {
+        max-width: 12rem;
+        text-align: end;
       }
     }
 
     .settings-form {
       display: grid;
-      gap: var(--space-3);
+      gap: 0.875rem;
     }
 
     label,
     fieldset {
       display: grid;
-      gap: 0.35rem;
+      gap: 0.375rem;
     }
 
     span,
     legend {
-      font-weight: 700;
+      font-weight: 500;
     }
 
     input {
       width: 100%;
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
-      padding: 0.55rem 0.7rem;
+      min-height: 2.75rem;
+      padding: 0.625rem 0.75rem;
       background: white;
     }
 
@@ -213,33 +271,46 @@
     }
 
     fieldset {
-      border: 1px dashed var(--border);
+      border: 1px solid var(--border-soft);
       border-radius: var(--radius-sm);
-      padding: var(--space-3);
+      padding: 0.75rem;
+      background: var(--surface-raised);
     }
 
     .severity-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: var(--space-3);
+      gap: 0.75rem;
     }
 
     .preview {
       background: var(--surface-muted);
       border-radius: var(--radius-sm);
       padding: 0.75rem;
+      display: grid;
+      gap: 0.25rem;
+
+      strong,
+      span {
+        display: block;
+      }
+
+      span {
+        color: var(--text-muted);
+        font-size: 0.8125rem;
+      }
     }
 
     .actions {
       display: flex;
       align-items: center;
-      gap: var(--space-3);
+      gap: 0.75rem;
       flex-wrap: wrap;
     }
 
     .saved {
-      color: #27713f;
-      font-weight: 700;
+      color: var(--employee-primary);
+      font-weight: 500;
     }
   }
 </style>

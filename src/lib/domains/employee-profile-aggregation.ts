@@ -228,7 +228,7 @@ export function buildEmployeeProfileDetails(
   now: string
 ): EmployeeProfileDetails | null {
   const user = state.users.find((item) => item.id === employeeId && item.role === 'employee');
-  if (!user || user.profileEnabled !== true) {
+  if (!user) {
     return null;
   }
 

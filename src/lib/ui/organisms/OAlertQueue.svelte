@@ -5,12 +5,54 @@
   import AButton from '$lib/ui/atoms/AButton.svelte';
   import MAlertSummary from '$lib/ui/molecules/MAlertSummary.svelte';
 
+  const pageSize = 20;
+
   export let items: AlertDetailsView[] = [];
   export let filters: AlertListQuery = {};
+  export let totalItems = items.length;
+
+  let visibleCount = pageSize;
+  let previousItemsSignature = '';
+
+  $: {
+    const nextItemsSignature = items.map((item) => item.alert.id).join('|');
+    if (nextItemsSignature !== previousItemsSignature) {
+      previousItemsSignature = nextItemsSignature;
+      visibleCount = pageSize;
+    }
+  }
+  $: visibleItems = items.slice(0, visibleCount);
+  $: hiddenCount = Math.max(items.length - visibleItems.length, 0);
+  $: hasActiveFilters = Boolean(
+    filters.status || filters.severity || filters.riskyAction || filters.reporterId
+  );
+  $: totalQueueLabel = `${formatAlertCount(totalItems)} total in queue`;
+  $: matchingLabel =
+    items.length === 1 ? '1 alert matches filters' : `${items.length} alerts match filters`;
+  $: queueTotalLabel = !hasActiveFilters
+    ? totalQueueLabel
+    : `${matchingLabel} · ${totalQueueLabel}`;
+
+  function loadMore() {
+    visibleCount = Math.min(visibleCount + pageSize, items.length);
+  }
+
+  function formatAlertCount(count: number) {
+    return `${count} ${count === 1 ? 'alert' : 'alerts'}`;
+  }
 </script>
 
 <section class="o-alert-queue">
-  <form method="GET" class="filters">
+  <div class="queue-viewbar" aria-label="Queue view presets">
+    <div>
+      <span>Queue view</span>
+      <b>Showing {visibleItems.length} of {formatAlertCount(items.length)}</b>
+      <small>{queueTotalLabel}</small>
+    </div>
+    <p>Prioritize by severity, risky action, age, and evidence.</p>
+  </div>
+
+  <form method="GET" action="/admin/alerts" class="filters">
     <ASelect name="status" value={filters.status ?? ''}>
       <option value="">All statuses</option>
       <option value="new">New</option>
@@ -38,32 +80,145 @@
     </ASelect>
 
     <AInput name="reporterId" value={filters.reporterId ?? ''} placeholder="Reporter ID" />
-    <AButton type="submit" variant="secondary">Apply filters</AButton>
+    <div class="filter-action">
+      <AButton type="submit" variant="secondary">Apply filters</AButton>
+    </div>
   </form>
 
   {#if items.length === 0}
-    <p>No alerts found for current filter.</p>
+    <p class="empty">No alerts found for current filter.</p>
   {:else}
     <div class="list">
-      {#each items as item (item.alert.id)}
+      {#each visibleItems as item (item.alert.id)}
         <MAlertSummary {item} />
       {/each}
+      {#if hiddenCount > 0}
+        <div class="pagination-guard" aria-live="polite">
+          <span>{hiddenCount} alerts hidden to keep the queue scannable.</span>
+          <AButton type="button" variant="secondary" onclick={loadMore}>Load more alerts</AButton>
+        </div>
+      {/if}
     </div>
   {/if}
 </section>
 
 <style lang="scss">
   .o-alert-queue {
+    display: grid;
+    gap: 0.875rem;
+
+    > .queue-viewbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem;
+      border-radius: var(--radius);
+      background: var(--surface);
+
+      span {
+        color: var(--text-muted);
+        font: 400 0.6875rem/1.4 var(--font-mono);
+        text-transform: uppercase;
+      }
+
+      b {
+        display: block;
+        margin-top: 0.25rem;
+        font-size: 1.125rem;
+        font-weight: 500;
+      }
+
+      small {
+        display: block;
+        margin-top: 0.25rem;
+        color: var(--text-muted);
+        font-size: 0.8125rem;
+      }
+
+      p {
+        max-width: 34rem;
+        color: var(--text-muted);
+        font-size: 0.875rem;
+        text-align: end;
+      }
+    }
+
     > .filters {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 0.6rem;
-      margin-bottom: 1rem;
+      grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(8.75rem, auto);
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem;
+      border-radius: var(--radius);
+      background: var(--surface);
+
+      > .filter-action {
+        display: flex;
+        align-self: stretch;
+
+        :global(.a-button) {
+          width: 100%;
+          min-height: 2.75rem;
+          border: 1px solid var(--border);
+        }
+      }
     }
 
     > .list {
       display: grid;
-      gap: 0.75rem;
+      gap: 0.5rem;
+      padding: 0.75rem;
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .pagination-guard {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      min-height: 3.5rem;
+      padding: 0.75rem 0.875rem;
+      border-radius: var(--radius-sm);
+      background: var(--surface-raised);
+
+      span {
+        color: var(--text-muted);
+        font-size: 0.875rem;
+      }
+
+      :global(.a-button) {
+        min-height: 2.5rem;
+        white-space: nowrap;
+      }
+    }
+
+    > .empty {
+      padding: 1rem;
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 760px) {
+      > .filters {
+        grid-template-columns: 1fr;
+      }
+
+      > .queue-viewbar {
+        align-items: flex-start;
+        flex-direction: column;
+
+        p {
+          text-align: start;
+        }
+      }
+
+      .pagination-guard {
+        align-items: stretch;
+        flex-direction: column;
+      }
     }
   }
 </style>

@@ -38,7 +38,6 @@ export type DemoUser = {
   id: string;
   role: UserRole;
   name: string;
-  profileEnabled?: boolean;
   persona?: EmployeePersona;
 };
 

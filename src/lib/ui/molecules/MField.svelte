@@ -13,10 +13,11 @@
 <style lang="scss">
   .m-field {
     display: grid;
-    gap: 0.4rem;
+    gap: 0.375rem;
 
     > .label {
-      font-weight: 600;
+      font-size: 0.875rem;
+      font-weight: 500;
     }
   }
 </style>

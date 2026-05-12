@@ -3,67 +3,44 @@
 
   export let summary: EmployeeProfileSummary;
 
-  $: href = summary.user.profileEnabled ? `/admin/employees/${summary.user.id}` : '';
+  $: href = `/admin/employees/${summary.user.id}`;
   $: cardLabel = `${summary.user.name}: ${summary.riskStatusLabel}`;
 </script>
 
-{#if href}
-  <a class="m-employee-risk-card {summary.riskStatus}" {href} aria-label={cardLabel}>
-    <div class="heading">
-      <div>
-        <h3>{summary.user.name}</h3>
-        <p>{summary.user.persona?.replaceAll('_', ' ') ?? 'employee'}</p>
-      </div>
-      <span class="status">{summary.riskStatusLabel}</span>
+<a class="m-employee-risk-card {summary.riskStatus}" {href} aria-label={cardLabel}>
+  <div class="heading">
+    <div>
+      <h3>{summary.user.name}</h3>
+      <p>{summary.user.persona?.replaceAll('_', ' ') ?? 'employee'}</p>
     </div>
+    <span class="status">{summary.riskStatusLabel}</span>
+  </div>
 
-    <div class="metrics">
-      <span><strong>{summary.totalReports}</strong> reports</span>
-      <span><strong>{summary.highRiskReports}</strong> risky</span>
-      <span><strong>{summary.openAlerts}</strong> open</span>
-      <span><strong>{summary.learningCompletionRate}%</strong> learning</span>
-    </div>
+  <div class="metrics">
+    <span><strong>{summary.totalReports}</strong> reports</span>
+    <span><strong>{summary.highRiskReports}</strong> risky</span>
+    <span><strong>{summary.openAlerts}</strong> open</span>
+    <span><strong>{summary.learningCompletionRate}%</strong> learning</span>
+  </div>
 
-    <p class="reason">
-      Clicks {summary.clickedLinkCount} &middot; Attachments {summary.downloadedAttachmentCount} &middot; Credentials
-      {summary.enteredCredentialsCount}
-    </p>
-  </a>
-{:else}
-  <article class="m-employee-risk-card {summary.riskStatus} summary-only" aria-label={cardLabel}>
-    <div class="heading">
-      <div>
-        <h3>{summary.user.name}</h3>
-        <p>{summary.user.persona?.replaceAll('_', ' ') ?? 'employee'}</p>
-      </div>
-      <span class="status">{summary.riskStatusLabel}</span>
-    </div>
-
-    <div class="metrics">
-      <span><strong>{summary.totalReports}</strong> reports</span>
-      <span><strong>{summary.highRiskReports}</strong> risky</span>
-      <span><strong>{summary.openAlerts}</strong> open</span>
-      <span><strong>{summary.learningCompletionRate}%</strong> learning</span>
-    </div>
-
-    <p class="reason">
-      Summary only &middot; Clicks {summary.clickedLinkCount} &middot; Attachments {summary.downloadedAttachmentCount}
-    </p>
-  </article>
-{/if}
+  <p class="reason">
+    Clicks {summary.clickedLinkCount} &middot; Attachments {summary.downloadedAttachmentCount} &middot; Credentials
+    {summary.enteredCredentialsCount}
+  </p>
+</a>
 
 <style lang="scss">
   .m-employee-risk-card {
     display: grid;
-    gap: var(--space-3);
+    gap: 0.75rem;
     min-height: 12.5rem;
     text-decoration: none;
     color: inherit;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-left: 0.45rem solid #27713f;
-    border-radius: var(--radius);
-    padding: var(--space-4);
+    background: var(--surface-raised);
+    border: 0;
+    border-left: 0.35rem solid var(--employee-primary);
+    border-radius: var(--radius-md);
+    padding: 0.875rem;
     box-shadow: var(--shadow);
 
     &.yellow {
@@ -74,13 +51,9 @@
       border-left-color: #b42318;
     }
 
-    &:not(.summary-only):hover {
+    &:hover {
       transform: translateY(-1px);
-      border-color: #8ab4e6;
-    }
-
-    &.summary-only {
-      background: var(--surface-muted);
+      background: var(--employee-tint);
     }
 
     > .heading {
@@ -101,6 +74,7 @@
       p {
         margin-top: 0.2rem;
         color: var(--text-muted);
+        font-size: 0.8125rem;
         text-transform: capitalize;
       }
     }
@@ -111,8 +85,8 @@
       padding: 0.25rem 0.55rem;
       background: #edf8f0;
       color: #27713f;
-      font-weight: 700;
-      font-size: 0.78rem;
+      font-weight: 500;
+      font-size: 0.75rem;
     }
 
     &.yellow .status {
@@ -136,7 +110,7 @@
         padding: 0.55rem;
         background: white;
         color: var(--text-muted);
-        font-size: 0.85rem;
+        font-size: 0.8125rem;
       }
 
       strong {
@@ -150,7 +124,7 @@
       margin: 0;
       color: var(--text-muted);
       line-height: 1.35;
-      font-size: 0.88rem;
+      font-size: 0.8125rem;
     }
   }
 </style>

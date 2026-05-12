@@ -261,7 +261,7 @@ export class InMemoryMockRepository implements MockRepository {
 
     const timeline = this.state.timelineEvents
       .filter((event) => event.alertId === alert.id)
-      .sort((a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt));
+      .sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
 
     const learningAssignment = this.state.learningAssignments.find(
       (assignment) => assignment.alertId === alert.id

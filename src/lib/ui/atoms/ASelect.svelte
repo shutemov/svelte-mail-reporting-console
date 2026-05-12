@@ -18,11 +18,13 @@
 <style lang="scss">
   .a-select {
     width: 100%;
+    min-height: 2.75rem;
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    padding-block: 0.55rem;
-    padding-inline: 0.7rem 2.1rem;
+    padding-block: 0.625rem;
+    padding-inline: 0.75rem 2.1rem;
     background: white;
+    color: var(--text);
     appearance: none;
     background-image:
       linear-gradient(45deg, transparent 50%, #4f607d 50%),

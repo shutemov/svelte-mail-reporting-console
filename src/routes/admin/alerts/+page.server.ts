@@ -12,6 +12,7 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 
   return {
     filters,
-    alerts: queries.listAlerts(filters)
+    alerts: queries.listAlerts(filters),
+    totalAlerts: queries.listAlerts({}).length
   };
 };

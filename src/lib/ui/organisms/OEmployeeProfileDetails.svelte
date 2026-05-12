@@ -71,9 +71,11 @@
         <ul>
           {#each details.reports as report (report.id)}
             <li>
-              <strong>{report.subject}</strong>
-              <span>{report.sender} &middot; {formatDate(report.createdAt)}</span>
-              <small>{report.riskyActions.map(formatAction).join(', ')}</small>
+              <a href={`/admin/alerts/${report.alertId}`} aria-label={`Open alert for ${report.subject}`}>
+                <strong>{report.subject}</strong>
+                <span>{report.sender} &middot; {formatDate(report.createdAt)}</span>
+                <small>{report.riskyActions.map(formatAction).join(', ')}</small>
+              </a>
             </li>
           {/each}
         </ul>
@@ -117,26 +119,42 @@
 <style lang="scss">
   .o-employee-profile-details {
     display: grid;
-    gap: var(--space-4);
+    gap: 0.875rem;
 
     > .hero {
+      position: relative;
       display: flex;
       justify-content: space-between;
-      gap: var(--space-4);
+      gap: 1rem;
       align-items: end;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: 0.5rem solid #27713f;
-      border-radius: var(--radius);
-      padding: var(--space-4);
-      box-shadow: var(--shadow);
+      overflow: hidden;
+      border-radius: var(--radius-md);
+      padding: 0.875rem 1rem 0.875rem 1.25rem;
+      background: linear-gradient(180deg, color-mix(in srgb, #27713f 7%, #ffffff), #ffffff 58%);
+
+      &::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        width: 5px;
+        background: #27713f;
+      }
 
       &.yellow {
-        border-left-color: #b7791f;
+        background: linear-gradient(180deg, color-mix(in srgb, #b7791f 8%, #ffffff), #ffffff 58%);
+
+        &::before {
+          background: #b7791f;
+        }
       }
 
       &.red {
-        border-left-color: #b42318;
+        background: linear-gradient(180deg, color-mix(in srgb, #b42318 8%, #ffffff), #ffffff 58%);
+
+        &::before {
+          background: #b42318;
+        }
       }
 
       h2,
@@ -145,7 +163,8 @@
       }
 
       h2 {
-        font-size: 1.8rem;
+        font-size: 1.625rem;
+        line-height: 1.12;
       }
 
       .eyebrow {
@@ -167,37 +186,43 @@
     > .metrics {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: var(--space-3);
+      gap: 0.5rem;
+      padding: 0.75rem;
+      border-radius: var(--radius);
+      background: color-mix(in srgb, var(--surface-muted) 72%, #ffffff);
+
+      :global(.m-metric-card) {
+        min-height: 6.25rem;
+        background: rgba(255, 255, 255, 0.72);
+      }
     }
 
     > .breakdown,
     .history-grid > article {
-      background: var(--surface);
-      border: 1px solid var(--border);
+      background: color-mix(in srgb, var(--surface-muted) 72%, #ffffff);
       border-radius: var(--radius);
-      padding: var(--space-4);
-      box-shadow: var(--shadow);
+      padding: 1rem;
     }
 
     > .breakdown {
       display: grid;
-      gap: var(--space-3);
+      gap: 0.875rem;
 
       h2 {
         margin: 0;
+        font-size: 1.375rem;
       }
 
       > div {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: var(--space-3);
+        gap: 0.5rem;
       }
 
       span {
-        border: 1px solid var(--border);
         border-radius: var(--radius-sm);
-        padding: var(--space-3);
-        background: var(--surface-muted);
+        padding: 0.875rem;
+        background: rgba(255, 255, 255, 0.72);
         color: var(--text-muted);
       }
 
@@ -211,10 +236,11 @@
     > .history-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--space-3);
+      gap: 0.875rem;
 
       h2 {
-        margin: 0 0 var(--space-3);
+        margin: 0 0 0.875rem;
+        font-size: 1.375rem;
       }
 
       p {
@@ -223,22 +249,51 @@
 
       ul {
         display: grid;
-        gap: var(--space-2);
+        gap: 0.5rem;
         list-style: none;
         margin: 0;
         padding: 0;
       }
 
       li {
-        display: grid;
-        gap: 0.2rem;
-        border-bottom: 1px solid var(--border);
-        padding-bottom: var(--space-2);
+        border-radius: var(--radius-sm);
+        background: rgba(255, 255, 255, 0.72);
+        transition:
+          background-color 140ms ease,
+          box-shadow 140ms ease,
+          transform 140ms ease;
 
         span,
         small {
           color: var(--text-muted);
           line-height: 1.35;
+        }
+
+        > a {
+          display: grid;
+          gap: 0.25rem;
+          min-height: 4.375rem;
+          padding: 0.75rem;
+          border-radius: inherit;
+          color: inherit;
+          text-decoration: none;
+
+          &:hover {
+            background: color-mix(in srgb, var(--admin-primary) 4%, rgba(255, 255, 255, 0.72));
+            box-shadow: 0 0.5rem 1.375rem rgba(24, 99, 220, 0.08);
+            transform: translateY(-1px);
+          }
+
+          &:focus-visible {
+            outline: none;
+            box-shadow: var(--shadow-focus);
+          }
+        }
+
+        &:not(:has(a)) {
+          display: grid;
+          gap: 0.25rem;
+          padding: 0.75rem;
         }
       }
     }
