@@ -5,6 +5,7 @@
   import AButton from '$lib/ui/atoms/AButton.svelte';
   import ACheckbox from '$lib/ui/atoms/ACheckbox.svelte';
   import AErrorMessage from '$lib/ui/atoms/AErrorMessage.svelte';
+  import MSeverityMixBar from '$lib/ui/molecules/MSeverityMixBar.svelte';
 
   type SimulationForm = {
     success?: boolean;
@@ -88,6 +89,7 @@
     <fieldset>
       <legend>Severity mix</legend>
       <p>Percent split for generated alerts. Values must add up to 100%.</p>
+      <MSeverityMixBar mix={values.severityMix} />
 
       <div class="severity-grid">
         <label>
