@@ -51,6 +51,9 @@ test('all employee profile cards open profile details', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Employee profile' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Risk action breakdown' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Reports' })).toBeVisible();
+  await page.getByRole('link', { name: 'Open alert for Urgent action required' }).click();
+  await expect(page).toHaveURL(/\/admin\/alerts\/alert-1$/);
+  await expect(page.getByRole('heading', { name: 'Urgent action required' })).toBeVisible();
 
   await page.goto('/admin');
   await page.getByRole('link', { name: /Carol Finance/ }).click();

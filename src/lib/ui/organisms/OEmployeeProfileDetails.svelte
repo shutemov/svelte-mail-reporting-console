@@ -71,9 +71,11 @@
         <ul>
           {#each details.reports as report (report.id)}
             <li>
-              <strong>{report.subject}</strong>
-              <span>{report.sender} &middot; {formatDate(report.createdAt)}</span>
-              <small>{report.riskyActions.map(formatAction).join(', ')}</small>
+              <a href={`/admin/alerts/${report.alertId}`} aria-label={`Open alert for ${report.subject}`}>
+                <strong>{report.subject}</strong>
+                <span>{report.sender} &middot; {formatDate(report.createdAt)}</span>
+                <small>{report.riskyActions.map(formatAction).join(', ')}</small>
+              </a>
             </li>
           {/each}
         </ul>
@@ -254,16 +256,44 @@
       }
 
       li {
-        display: grid;
-        gap: 0.25rem;
         border-radius: var(--radius-sm);
-        padding: 0.75rem;
         background: rgba(255, 255, 255, 0.72);
+        transition:
+          background-color 140ms ease,
+          box-shadow 140ms ease,
+          transform 140ms ease;
 
         span,
         small {
           color: var(--text-muted);
           line-height: 1.35;
+        }
+
+        > a {
+          display: grid;
+          gap: 0.25rem;
+          min-height: 4.375rem;
+          padding: 0.75rem;
+          border-radius: inherit;
+          color: inherit;
+          text-decoration: none;
+
+          &:hover {
+            background: color-mix(in srgb, var(--admin-primary) 4%, rgba(255, 255, 255, 0.72));
+            box-shadow: 0 0.5rem 1.375rem rgba(24, 99, 220, 0.08);
+            transform: translateY(-1px);
+          }
+
+          &:focus-visible {
+            outline: none;
+            box-shadow: var(--shadow-focus);
+          }
+        }
+
+        &:not(:has(a)) {
+          display: grid;
+          gap: 0.25rem;
+          padding: 0.75rem;
         }
       }
     }
