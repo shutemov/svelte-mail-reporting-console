@@ -4,6 +4,7 @@
   export let disabled = false;
   export let loading = false;
   export let label = '';
+  export let onclick: ((event: MouseEvent) => void) | undefined = undefined;
 
   $: variantClass =
     variant === 'primary'
@@ -13,7 +14,7 @@
         : 'is-danger';
 </script>
 
-<button class={`a-button ${variantClass}`} {type} {disabled} aria-busy={loading}>
+<button class={`a-button ${variantClass}`} {type} {disabled} aria-busy={loading} {onclick}>
   {#if label}
     {label}
   {:else}
