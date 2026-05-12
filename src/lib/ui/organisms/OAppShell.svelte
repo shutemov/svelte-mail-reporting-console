@@ -13,7 +13,6 @@
   export let userRole: UserRole = 'employee';
   export let users: DemoUser[] = [];
   export let currentUserId = '';
-  export let currentPath = '/';
   export let navItems: ShellNavItem[] = [];
   export let activeHref: string | null = null;
 
@@ -92,7 +91,7 @@
         <span>/ inbound-mail-demo</span>
       </div>
 
-      <MDemoRoleSwitcher {users} {currentUserId} returnTo={currentPath} />
+      <MDemoRoleSwitcher {users} {currentUserId} />
     </header>
 
     <nav class="mobile-tabs" aria-label="Mobile navigation">
