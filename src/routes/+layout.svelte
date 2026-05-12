@@ -82,7 +82,6 @@
   userRole={data.user.role}
   users={data.users}
   currentUserId={data.user.id}
-  currentPath={data.currentPath}
   navItems={visibleNavItems}
   activeHref={getActiveHref()}
 >
