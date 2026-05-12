@@ -45,9 +45,10 @@
 <section class="o-simulation-flow-settings">
   <div class="heading">
     <div>
-      <h2>Flow settings</h2>
-      <p>Shape the synthetic alert stream while keeping load within MVP-safe guardrails.</p>
+      <p class="eyebrow">Generation settings</p>
+      <h2>Workload profile</h2>
     </div>
+    <span>Affects new synthetic alerts only</span>
 
     <form method="POST" action="?/resetConfigDefaults">
       <AButton type="submit" variant="secondary">Reset to defaults</AButton>
@@ -140,7 +141,8 @@
     />
 
     <div class="preview">
-      Preview expected volume: <strong>{expectedVolume}</strong> generated alerts in the next 15 minutes.
+      <strong>Expected volume: {expectedVolume} alerts in next 15 minutes</strong>
+      <span>Current mix follows the saved malicious ratio and severity split.</span>
     </div>
 
     <div class="actions">
@@ -157,51 +159,64 @@
 <style lang="scss">
   .o-simulation-flow-settings {
     background: var(--surface);
-    border: 1px solid var(--border);
+    border: 0;
     border-radius: var(--radius);
-    padding: var(--space-4);
+    padding: 1rem;
     box-shadow: var(--shadow);
 
     > .heading {
       display: flex;
       justify-content: space-between;
-      gap: var(--space-3);
+      gap: 0.75rem;
       align-items: start;
       flex-wrap: wrap;
-      margin-bottom: var(--space-4);
+      margin-bottom: 1rem;
 
       h2,
       p {
         margin: 0;
       }
 
-      p {
-        margin-top: 0.25rem;
+      .eyebrow,
+      > span {
         color: var(--text-muted);
+        font: 400 0.75rem/1.4 var(--font-mono);
+        text-transform: uppercase;
+      }
+
+      h2 {
+        margin-top: 0.25rem;
+        font-size: 1.375rem;
+      }
+
+      > span {
+        max-width: 12rem;
+        text-align: end;
       }
     }
 
     .settings-form {
       display: grid;
-      gap: var(--space-3);
+      gap: 0.875rem;
     }
 
     label,
     fieldset {
       display: grid;
-      gap: 0.35rem;
+      gap: 0.375rem;
     }
 
     span,
     legend {
-      font-weight: 700;
+      font-weight: 500;
     }
 
     input {
       width: 100%;
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
-      padding: 0.55rem 0.7rem;
+      min-height: 2.75rem;
+      padding: 0.625rem 0.75rem;
       background: white;
     }
 
@@ -213,33 +228,46 @@
     }
 
     fieldset {
-      border: 1px dashed var(--border);
+      border: 1px solid var(--border-soft);
       border-radius: var(--radius-sm);
-      padding: var(--space-3);
+      padding: 0.75rem;
+      background: var(--surface-raised);
     }
 
     .severity-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: var(--space-3);
+      gap: 0.75rem;
     }
 
     .preview {
       background: var(--surface-muted);
       border-radius: var(--radius-sm);
       padding: 0.75rem;
+      display: grid;
+      gap: 0.25rem;
+
+      strong,
+      span {
+        display: block;
+      }
+
+      span {
+        color: var(--text-muted);
+        font-size: 0.8125rem;
+      }
     }
 
     .actions {
       display: flex;
       align-items: center;
-      gap: var(--space-3);
+      gap: 0.75rem;
       flex-wrap: wrap;
     }
 
     .saved {
-      color: #27713f;
-      font-weight: 700;
+      color: var(--employee-primary);
+      font-weight: 500;
     }
   }
 </style>
