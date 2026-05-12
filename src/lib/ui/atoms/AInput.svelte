@@ -11,9 +11,15 @@
 <style lang="scss">
   .a-input {
     width: 100%;
+    min-height: 2.75rem;
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    padding: 0.55rem 0.7rem;
+    padding: 0.625rem 0.75rem;
     background: white;
+    color: var(--text);
+
+    &::placeholder {
+      color: color-mix(in srgb, var(--text-muted) 76%, white);
+    }
   }
 </style>

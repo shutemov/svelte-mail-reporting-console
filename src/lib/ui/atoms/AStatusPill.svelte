@@ -16,25 +16,27 @@
   .a-status-pill {
     display: inline-flex;
     align-items: center;
+    min-height: 1.75rem;
     border-radius: 999px;
-    padding: 0.2rem 0.55rem;
-    font-size: 0.78rem;
-    font-weight: 700;
+    padding: 0.3125rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
   }
   .sev-low,
   .status-new {
-    background: #e6f0ff;
-    color: #104b8e;
+    background: var(--admin-tint);
+    color: var(--admin-primary);
   }
   .sev-medium,
   .status-investigating {
     background: #fff3dd;
-    color: #8b5800;
+    color: var(--risk-med);
   }
   .sev-high,
   .status-resolved_malicious {
     background: #ffe6eb;
-    color: #9a1f38;
+    color: var(--risk-high);
   }
   .sev-critical,
   .status-closed {
@@ -42,7 +44,7 @@
     color: #7d1d1d;
   }
   .status-resolved_safe {
-    background: #ddf8e8;
-    color: #136536;
+    background: var(--employee-tint);
+    color: var(--employee-primary);
   }
 </style>

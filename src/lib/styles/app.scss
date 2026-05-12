@@ -1,25 +1,74 @@
 :root {
   /* Typography */
   font-size: 16px;
-  font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+  font-family:
+    'Unica77 Cohere Web',
+    Inter,
+    'Segoe UI',
+    Arial,
+    ui-sans-serif,
+    system-ui,
+    sans-serif;
+  --font-display:
+    CohereText,
+    'Space Grotesk',
+    Inter,
+    'Segoe UI',
+    ui-sans-serif,
+    system-ui,
+    sans-serif;
+  --font-body:
+    'Unica77 Cohere Web',
+    Inter,
+    'Segoe UI',
+    Arial,
+    ui-sans-serif,
+    system-ui,
+    sans-serif;
+  --font-mono:
+    CohereMono,
+    'SFMono-Regular',
+    Consolas,
+    'Liberation Mono',
+    monospace;
 
   /* Color tokens */
-  --bg: #f5f7fb;
+  --bg: #ffffff;
   --surface: #ffffff;
-  --surface-muted: #f0f3f8;
-  --text: #162033;
-  --text-muted: #5d6b87;
-  --border: #d7deea;
-  --accent: #0f6cc7;
-  --accent-strong: #0d4f90;
-  --danger: #bb1c2f;
-  --success: #1f8a4c;
-  --warning: #b87900;
+  --surface-soft: #e6edf6;
+  --surface-muted: #f4f7fb;
+  --surface-raised: #f9fcff;
+  --text: #000000;
+  --text-soft: #212121;
+  --text-muted: #535d6f;
+  --border: #cbd4e2;
+  --border-soft: #dfe7f1;
+  --accent: #1863dc;
+  --accent-strong: #0f4fb5;
+  --admin-primary: #1863dc;
+  --admin-primary-strong: #0f4fb5;
+  --admin-tint: #e4f1ff;
+  --admin-border: #c8ddf8;
+  --employee-primary: #147a3d;
+  --employee-primary-strong: #0f6230;
+  --employee-tint: #edf8f2;
+  --employee-border: #dcefe5;
+  --demo-tint: #e6f2ff;
+  --demo-border: #cfe1f6;
+  --risk-high: #b30000;
+  --risk-med: #9b5d00;
+  --risk-low: #147a3d;
+  --danger: #b30000;
+  --success: #147a3d;
+  --warning: #9b5d00;
 
   /* Radius + shadow */
-  --radius: 0.75rem;
-  --radius-sm: 0.5rem;
-  --shadow: 0 8px 24px rgba(15, 43, 84, 0.08);
+  --radius: 22px;
+  --radius-md: 18px;
+  --radius-sm: 14px;
+  --radius-xs: 10px;
+  --shadow: none;
+  --shadow-focus: 0 0 0 2px rgba(24, 99, 220, 0.18);
 
   /* Spacing scale (4pt-based, rem) */
   --space-0: 0;
@@ -35,8 +84,8 @@
   --space-16: 4rem;
 
   /* Layout */
-  --sidebar-width: 15rem;
-  --content-max-width: 72rem;
+  --sidebar-width: 17rem;
+  --content-max-width: 86rem;
 }
 
 * {
@@ -45,12 +94,12 @@
 
 body {
   margin: 0;
-  background:
-    radial-gradient(circle at top right, #e4eefc, transparent 40%),
-    radial-gradient(circle at 20% 80%, #e9f7f0, transparent 35%),
-  var(--bg);
+  min-height: 100vh;
+  background: var(--bg);
   color: var(--text);
-  line-height: 1.45;
+  font-family: var(--font-body);
+  line-height: 1.5;
+  letter-spacing: 0;
 }
 
 a {
@@ -68,6 +117,19 @@ textarea {
   font: inherit;
 }
 
+button {
+  cursor: pointer;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 h1,
 h2,
 h3,
@@ -76,11 +138,40 @@ p {
 }
 
 h1 {
-  font-size: clamp(1.75rem, 1.3rem + 1.4vw, 2.25rem);
-  line-height: 1.15;
+  font-family: var(--font-display);
+  font-size: 2.25rem;
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: 0;
+  text-wrap: pretty;
 }
 
 h2 {
-  font-size: 1.375rem;
-  line-height: 1.2;
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.18;
+  letter-spacing: 0;
+  text-wrap: pretty;
+}
+
+h3 {
+  font-size: 1.125rem;
+  font-weight: 400;
+  line-height: 1.25;
+  letter-spacing: 0;
+  text-wrap: pretty;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+@media (max-width: 760px) {
+  h1 {
+    font-size: 1.875rem;
+  }
+
+  h2 {
+    font-size: 1.375rem;
+  }
 }

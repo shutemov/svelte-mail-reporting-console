@@ -8,38 +8,52 @@
   type NavItem = {
     href: string;
     label: string;
+    shortLabel?: string;
+    hint?: string;
     roles: UserRole[];
   };
 
   const navItems: NavItem[] = [
     {
       href: '/employee/report',
-      label: 'Report mail',
+      label: 'Manual report',
+      shortLabel: 'Report',
+      hint: 'Source',
       roles: ['employee']
     },
     {
       href: '/employee/reports',
-      label: 'My reports',
+      label: 'Report status',
+      shortLabel: 'History',
+      hint: 'Calm',
       roles: ['employee']
     },
     {
       href: '/employee/learning',
-      label: 'My learning',
+      label: 'Learning module',
+      shortLabel: 'Learning',
+      hint: 'Due',
       roles: ['employee']
     },
     {
       href: '/admin',
-      label: 'Admin dashboard',
+      label: 'Cockpit',
+      shortLabel: 'Dashboard',
+      hint: 'Live',
       roles: ['admin', 'viewer']
     },
     {
       href: '/admin/alerts',
-      label: 'Alert queue',
+      label: 'Prioritize queue',
+      shortLabel: 'Queue',
+      hint: 'Queue',
       roles: ['admin', 'viewer']
     },
     {
       href: '/admin/simulation',
-      label: 'Simulation',
+      label: 'Start simulation',
+      shortLabel: 'Simulation',
+      hint: 'Load',
       roles: ['admin', 'viewer']
     }
   ];
