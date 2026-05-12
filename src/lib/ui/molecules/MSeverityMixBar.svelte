@@ -24,6 +24,12 @@
   $: total = segments.reduce((sum, item) => sum + item.value, 0);
   $: barTotal = total > 0 ? total : 1;
   $: isBalanced = total === 100;
+  $: isOverLimit = total > 100;
+  $: totalHint = isOverLimit
+    ? `Total ${total}% - reduce by ${total - 100}%`
+    : isBalanced
+      ? 'Total 100%'
+      : `Total ${total}% - add ${100 - total}%`;
 </script>
 
 <div class="m-severity-mix-bar" aria-label={`Severity mix total ${total}%`}>
@@ -38,7 +44,9 @@
           class={`segment ${segment.key}`}
           style:width={`${(segment.value / barTotal) * 100}%`}
           title={`${segment.label}: ${segment.value}%`}
-        ></span>
+        >
+          <em>{segment.value}%</em>
+        </span>
       {/if}
     {/each}
   </div>
@@ -51,7 +59,9 @@
         <em>{segment.value}%</em>
       </span>
     {/each}
-    <span class="total" class:balanced={isBalanced}>Total {total}%</span>
+    <span class="total" class:balanced={isBalanced} class:over-limit={isOverLimit}>
+      {totalHint}
+    </span>
   </div>
 </div>
 
@@ -66,15 +76,33 @@
 
   .mix-bar {
     display: flex;
-    min-height: 0.875rem;
+    min-height: 1.375rem;
     overflow: hidden;
     border-radius: 999px;
     background: var(--surface-muted);
   }
 
   .segment {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     min-width: 0.25rem;
+    overflow: hidden;
+    padding-inline: 0.25rem;
     transition: width 160ms ease;
+
+    em {
+      min-width: 0;
+      overflow: hidden;
+      color: rgba(255, 255, 255, 0.92);
+      font-size: 0.6875rem;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 1;
+      text-overflow: ellipsis;
+      text-shadow: 0 1px 1px rgba(0, 0, 0, 0.16);
+      white-space: nowrap;
+    }
 
     &.low {
       background: color-mix(in srgb, var(--employee-primary) 50%, #ffffff);
@@ -148,6 +176,10 @@
 
     &.balanced {
       color: var(--text-muted);
+    }
+
+    &.over-limit {
+      color: var(--danger);
     }
   }
 </style>
