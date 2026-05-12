@@ -31,6 +31,10 @@
   $: errors = form?.fieldErrors ?? {};
   $: expectedVolume = Number(values.ratePerMinute ?? config.ratePerMinute) * 15;
 
+  function releaseNumberInputWheel(event: WheelEvent) {
+    (event.currentTarget as HTMLInputElement).blur();
+  }
+
   const enhanceSettings: SubmitFunction = () => {
     pending = true;
     saved = false;
@@ -67,6 +71,7 @@
         min="1"
         max="20"
         value={values.ratePerMinute}
+        on:wheel={releaseNumberInputWheel}
       />
       <small>Controls incoming queue pressure. Guardrail: 1..20 alerts per minute.</small>
       <AErrorMessage message={errors.ratePerMinute ?? ''} />
@@ -81,6 +86,7 @@
         max="1"
         step="0.05"
         value={values.maliciousRatio}
+        on:wheel={releaseNumberInputWheel}
       />
       <small>Higher values make decision quality metrics harsher and more useful.</small>
       <AErrorMessage message={errors.maliciousRatio ?? ''} />
@@ -94,7 +100,14 @@
       <div class="severity-grid">
         <label>
           <span>Low</span>
-          <input name="severityMix.low" type="number" min="0" max="100" value={values.severityMix.low} />
+          <input
+            name="severityMix.low"
+            type="number"
+            min="0"
+            max="100"
+            value={values.severityMix.low}
+            on:wheel={releaseNumberInputWheel}
+          />
           <AErrorMessage message={errors['severityMix.low'] ?? ''} />
         </label>
         <label>
@@ -105,12 +118,20 @@
             min="0"
             max="100"
             value={values.severityMix.medium}
+            on:wheel={releaseNumberInputWheel}
           />
           <AErrorMessage message={errors['severityMix.medium'] ?? ''} />
         </label>
         <label>
           <span>High</span>
-          <input name="severityMix.high" type="number" min="0" max="100" value={values.severityMix.high} />
+          <input
+            name="severityMix.high"
+            type="number"
+            min="0"
+            max="100"
+            value={values.severityMix.high}
+            on:wheel={releaseNumberInputWheel}
+          />
           <AErrorMessage message={errors['severityMix.high'] ?? ''} />
         </label>
         <label>
@@ -121,6 +142,7 @@
             min="0"
             max="100"
             value={values.severityMix.critical}
+            on:wheel={releaseNumberInputWheel}
           />
           <AErrorMessage message={errors['severityMix.critical'] ?? ''} />
         </label>
@@ -131,7 +153,7 @@
 
     <label>
       <span>Seed</span>
-      <input name="seed" type="number" step="1" value={values.seed} />
+      <input name="seed" type="number" step="1" value={values.seed} on:wheel={releaseNumberInputWheel} />
       <small>Same seed plus same sequence gives repeatable synthetic reports.</small>
       <AErrorMessage message={errors.seed ?? ''} />
     </label>
