@@ -58,9 +58,9 @@
     }
   ];
 
-  const visibleNavItems = navItems.filter((item) => item.roles.includes(data.user.role));
+  $: visibleNavItems = navItems.filter((item) => item.roles.includes(data.user.role));
 
-  const getActiveHref = (): string | null => {
+  $: activeHref = (() => {
     if (!data.currentRouteId) {
       return null;
     }
@@ -74,7 +74,7 @@
       .sort((a, b) => b.href.length - a.href.length);
 
     return matched[0]?.href ?? null;
-  };
+  })();
 </script>
 
 <OAppShell
@@ -83,7 +83,7 @@
   users={data.users}
   currentUserId={data.user.id}
   navItems={visibleNavItems}
-  activeHref={getActiveHref()}
+  {activeHref}
 >
   <slot />
 </OAppShell>
