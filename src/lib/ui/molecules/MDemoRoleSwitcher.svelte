@@ -21,8 +21,29 @@
 <style lang="scss">
   .m-demo-role-switcher {
     display: flex;
-    gap: 0.5rem;
     align-items: center;
-    min-width: 280px;
+    gap: 0.5rem;
+    min-width: min(100%, 20rem);
+
+    :global(.a-select) {
+      min-height: 2.5rem;
+      border-color: transparent;
+      border-radius: 999px;
+      background-color: var(--surface);
+      font-size: 0.875rem;
+    }
+
+    :global(.a-button) {
+      flex: 0 0 auto;
+    }
+
+    @media (max-width: 760px) {
+      width: 100%;
+      align-items: stretch;
+
+      :global(.a-select) {
+        min-width: 0;
+      }
+    }
   }
 </style>

@@ -11,8 +11,10 @@
     width: 100%;
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    padding: 0.55rem 0.7rem;
+    padding: 0.625rem 0.75rem;
     resize: vertical;
     min-height: 6rem;
+    background: white;
+    color: var(--text);
   }
 </style>
