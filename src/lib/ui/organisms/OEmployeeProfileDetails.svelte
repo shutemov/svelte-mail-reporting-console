@@ -173,10 +173,6 @@
       .last-report {
         display: grid;
         gap: 0.25rem;
-        min-width: 10rem;
-        border-radius: var(--radius-sm);
-        padding: 0.625rem 0.75rem;
-        background: rgba(255, 255, 255, 0.56);
         text-align: right;
 
         span {
