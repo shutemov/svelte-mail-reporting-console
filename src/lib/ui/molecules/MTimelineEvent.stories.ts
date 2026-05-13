@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
 
 import MTimelineEvent from './MTimelineEvent.svelte';
-import type { TimelineEvent } from '$lib/domains/types';
+import type { TimelineEvent } from '$lib/domains';
 
 const event: TimelineEvent = {
   id: 'event-1',

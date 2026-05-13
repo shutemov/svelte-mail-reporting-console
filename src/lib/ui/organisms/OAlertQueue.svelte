@@ -1,6 +1,6 @@
 <script lang="ts">
   import { pluralize } from '$lib/common/text';
-  import type { AlertDetailsView, AlertListQuery } from '$lib/domains/types';
+  import type { AlertDetailsView, AlertListQuery } from '$lib/domains';
   import AInput from '$lib/ui/atoms/AInput.svelte';
   import ASelect from '$lib/ui/atoms/ASelect.svelte';
   import AButton from '$lib/ui/atoms/AButton.svelte';

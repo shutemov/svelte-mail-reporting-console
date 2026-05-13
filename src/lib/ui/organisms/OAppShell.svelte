@@ -1,6 +1,6 @@
 <script lang="ts">
   import MDemoRoleSwitcher from '$lib/ui/molecules/MDemoRoleSwitcher.svelte';
-  import type { DemoUser, UserRole } from '$lib/domains/types';
+  import type { DemoUser, UserRole } from '$lib/domains';
 
   type ShellNavItem = {
     href: string;

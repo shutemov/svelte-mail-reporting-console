@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { DashboardSummary } from '$lib/domains/types';
+  import type { DashboardSummary } from '$lib/domains';
 
   export let summary: DashboardSummary;
 </script>

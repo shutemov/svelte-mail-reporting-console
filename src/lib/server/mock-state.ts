@@ -10,7 +10,7 @@ import type {
   SimulationConfig,
   SimulationSession,
   TimelineEvent
-} from '$lib/domains/types';
+} from '$lib/domains';
 import { defaultSimulationConfig } from './simulation-engine';
 
 export type MockState = {
@@ -174,13 +174,13 @@ export function createSeedState(seed: SeedName): MockState {
 }
 
 export type MockRepository = {
-  reset(seed: SeedName): import('$lib/domains/types').DashboardSummary;
+  reset(seed: SeedName): import('$lib/domains').DashboardSummary;
   getCurrentState(): MockState;
   getUserById(userId: string): DemoUser | null;
   listReportsForUser(userId: string): Report[];
   getReportById(reportId: string): Report | null;
   createReport(
-    input: import('$lib/domains/types').SubmitReportInput,
+    input: import('$lib/domains').SubmitReportInput,
     actor: DemoUser,
     now: string
   ): Report;
@@ -192,7 +192,7 @@ export type MockRepository = {
   setSimulationMode(mode: SimulationSession['mode'], now: string): SimulationSession;
   resetSimulation(now: string): SimulationSession;
   createSimulationReport(
-    input: import('$lib/domains/types').SubmitReportInput,
+    input: import('$lib/domains').SubmitReportInput,
     actor: DemoUser,
     now: string,
     severity: Severity,

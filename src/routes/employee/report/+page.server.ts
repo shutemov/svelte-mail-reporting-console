@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import type { RiskyAction } from '$lib/domains/types';
+import type { RiskyAction } from '$lib/domains';
 import { commands } from '$lib/server/modules';
 
 export const load: PageServerLoad = async ({ locals }) => {

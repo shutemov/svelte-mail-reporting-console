@@ -1,6 +1,6 @@
 <script lang="ts">
   import { formatLearningStatus } from '$lib/domains/labels';
-  import type { LearningAssignmentView } from '$lib/domains/types';
+  import type { LearningAssignmentView } from '$lib/domains';
   import AButton from '$lib/ui/atoms/AButton.svelte';
 
   export let item: LearningAssignmentView;

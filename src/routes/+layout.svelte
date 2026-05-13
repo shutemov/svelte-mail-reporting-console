@@ -1,6 +1,6 @@
 <script lang="ts">
   import OAppShell from '$lib/ui/organisms/OAppShell.svelte';
-  import type { UserRole } from '$lib/domains/types';
+  import type { UserRole } from '$lib/domains';
   import type { LayoutData } from './$types';
 
   export let data: LayoutData;

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { formatDateTime } from '$lib/common/date-time';
-  import type { TimelineEvent } from '$lib/domains/types';
+  import type { TimelineEvent } from '$lib/domains';
 
   export let event: TimelineEvent;
 </script>

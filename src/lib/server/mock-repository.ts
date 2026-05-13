@@ -11,9 +11,9 @@ import type {
   SimulationConfig,
   SubmitReportInput,
   TimelineEvent
-} from '$lib/domains/types';
-import { buildDashboardSummary } from '$lib/domains/dashboard-aggregation';
-import { calculateSeverity } from '$lib/domains/risk-scoring';
+} from '$lib/domains';
+import { buildDashboardSummary } from '$lib/domains/dashboard';
+import { calculateSeverity } from '$lib/domains/risk';
 import { createSeedState, type MockRepository, type MockState, type SeedName } from './mock-state';
 import { defaultSimulationConfig } from './simulation-engine';
 

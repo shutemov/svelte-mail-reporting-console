@@ -1,9 +1,9 @@
-import { buildDashboardSummary } from '$lib/domains/dashboard-aggregation';
+import { buildDashboardSummary } from '$lib/domains/dashboard';
 import {
   buildEmployeeProfileDetails,
   buildEmployeeProfileSummaries
-} from '$lib/domains/employee-profile-aggregation';
-import type { AlertDetailsView, AlertListQuery, LearningAssignmentView } from '$lib/domains/types';
+} from '$lib/domains/employee-profile';
+import type { AlertDetailsView, AlertListQuery, LearningAssignmentView } from '$lib/domains';
 import type { MockRepository } from './mock-state';
 import { buildSimulationSummary } from './simulation-metrics';
 

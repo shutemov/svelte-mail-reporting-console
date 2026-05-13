@@ -6,7 +6,7 @@ import {
   completeLearningSchema,
   simulationConfigSchema,
   submitReportSchema
-} from '$lib/domains/schemas';
+} from '$lib/domains';
 import {
   type AddInvestigationNoteInput,
   type AlertCommandInput,
@@ -19,8 +19,8 @@ import {
   type SimulationConfig,
   type SimulationSummary,
   type SubmitReportInput
-} from '$lib/domains/types';
-import { applyAlertCommand, type AlertCommand } from '$lib/domains/alert-lifecycle';
+} from '$lib/domains';
+import { applyAlertCommand, type AlertCommand } from '$lib/domains/alert';
 import type { MockRepository } from './mock-state';
 import type { InMemoryTestControls } from './test-controls';
 import { createTimelineEvent } from './timeline-factory';
@@ -40,12 +40,12 @@ export interface ServerCommands {
     actor: DemoUser,
     alertId: string,
     input: AlertCommandInput
-  ): Promise<MutationResult<AlertCommandInput, import('$lib/domains/types').AlertDetailsView>>;
+  ): Promise<MutationResult<AlertCommandInput, import('$lib/domains').AlertDetailsView>>;
   addInvestigationNote(
     actor: DemoUser,
     alertId: string,
     input: AddInvestigationNoteInput
-  ): Promise<MutationResult<AddInvestigationNoteInput, import('$lib/domains/types').AlertDetailsView>>;
+  ): Promise<MutationResult<AddInvestigationNoteInput, import('$lib/domains').AlertDetailsView>>;
   assignLearning(
     actor: DemoUser,
     alertId: string,

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { formatRiskyActions } from '$lib/domains/labels';
   import AStatusPill from '$lib/ui/atoms/AStatusPill.svelte';
-  import type { AlertDetailsView } from '$lib/domains/types';
+  import type { AlertDetailsView } from '$lib/domains';
 
   export let item: AlertDetailsView;
 </script>

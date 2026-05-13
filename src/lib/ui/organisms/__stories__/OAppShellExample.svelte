@@ -3,7 +3,7 @@
   import ODashboardSummary from '$lib/ui/organisms/ODashboardSummary.svelte';
   import MPageHeading from '$lib/ui/molecules/MPageHeading.svelte';
   import { storyDashboardSummary, storyNavItems, storyUsers } from '$lib/ui/storybook/fixtures';
-  import type { DemoUser, UserRole } from '$lib/domains/types';
+  import type { DemoUser, UserRole } from '$lib/domains';
 
   export let userName = 'Alex Morgan';
   export let userRole: UserRole = 'admin';

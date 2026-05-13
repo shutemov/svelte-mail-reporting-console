@@ -14,7 +14,7 @@ import type {
   SimulationSession,
   SimulationSummary,
   TimelineEvent
-} from '$lib/domains/types';
+} from '$lib/domains';
 
 export const storyUsers: DemoUser[] = [
   {

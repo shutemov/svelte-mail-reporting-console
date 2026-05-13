@@ -1,7 +1,7 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
   import type { SubmitFunction } from '@sveltejs/kit';
-  import type { Severity, SimulationConfig } from '$lib/domains/types';
+  import type { Severity, SimulationConfig } from '$lib/domains';
   import AButton from '$lib/ui/atoms/AButton.svelte';
   import ACheckbox from '$lib/ui/atoms/ACheckbox.svelte';
   import AErrorMessage from '$lib/ui/atoms/AErrorMessage.svelte';

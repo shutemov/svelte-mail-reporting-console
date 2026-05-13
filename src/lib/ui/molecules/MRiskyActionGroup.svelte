@@ -1,6 +1,6 @@
 <script lang="ts">
   import ACheckbox from '$lib/ui/atoms/ACheckbox.svelte';
-  import type { RiskyAction } from '$lib/domains/types';
+  import type { RiskyAction } from '$lib/domains';
 
   export let selected: RiskyAction[] = [];
 

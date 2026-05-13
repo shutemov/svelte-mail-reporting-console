@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { calculateSeverity, validateRiskyActionCombination } from '$lib/domains/risk-scoring';
+import { calculateSeverity, validateRiskyActionCombination } from '$lib/domains/risk';
 
 describe('risk-scoring', () => {
   it('returns expected severity by action', () => {

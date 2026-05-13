@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
 
 import MAlertSummary from './MAlertSummary.svelte';
-import type { AlertDetailsView } from '$lib/domains/types';
+import type { AlertDetailsView } from '$lib/domains';
 
 const alertSummary: AlertDetailsView = {
   alert: {

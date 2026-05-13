@@ -1,6 +1,6 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { failNextSchema } from '$lib/domains/schemas';
+import { failNextSchema } from '$lib/domains';
 import { testControls } from '$lib/server/modules';
 
 export const POST: RequestHandler = async ({ request }) => {

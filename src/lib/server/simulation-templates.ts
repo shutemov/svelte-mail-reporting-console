@@ -1,4 +1,4 @@
-import type { GroundTruthOutcome, RiskyAction } from '$lib/domains/types';
+import type { GroundTruthOutcome, RiskyAction } from '$lib/domains';
 
 export type SimulationTemplate = {
   id: string;

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { LearningAssignmentView } from '$lib/domains/types';
+  import type { LearningAssignmentView } from '$lib/domains';
 
   export let assignments: LearningAssignmentView[] = [];
 </script>

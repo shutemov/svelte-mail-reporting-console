@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import type { SimulationConfig } from '$lib/domains/types';
+import type { SimulationConfig } from '$lib/domains';
 import { commands, queries } from '$lib/server/modules';
 import { defaultSimulationConfig } from '$lib/server/simulation-engine';
 

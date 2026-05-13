@@ -1,4 +1,4 @@
-import type { DemoUser } from '$lib/domains/types';
+import type { DemoUser } from '$lib/domains';
 import type { MockRepository } from './mock-state';
 
 export interface DemoAuth {

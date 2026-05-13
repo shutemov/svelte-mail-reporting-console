@@ -1,6 +1,6 @@
 <script lang="ts">
   import { formatShortTime } from '$lib/common/date-time';
-  import type { SimulationSession } from '$lib/domains/types';
+  import type { SimulationSession } from '$lib/domains';
   import AButton from '$lib/ui/atoms/AButton.svelte';
   import AErrorMessage from '$lib/ui/atoms/AErrorMessage.svelte';
 

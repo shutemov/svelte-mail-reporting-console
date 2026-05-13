@@ -9,7 +9,7 @@ import type {
   SimulationSummary,
   TimelineEvent,
   TriageOutcomeMetrics
-} from '$lib/domains/types';
+} from '$lib/domains';
 
 type SimulationMetricState = {
   alerts: Alert[];

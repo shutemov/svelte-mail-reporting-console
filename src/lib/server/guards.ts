@@ -1,5 +1,5 @@
 import { fail, redirect } from '@sveltejs/kit';
-import type { DemoUser, UserRole } from '$lib/domains/types';
+import type { DemoUser, UserRole } from '$lib/domains';
 
 export function requireRole(user: DemoUser, role: UserRole) {
   if (user.role !== role) {

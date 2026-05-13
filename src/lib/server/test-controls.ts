@@ -1,6 +1,6 @@
-import { buildDashboardSummary } from '$lib/domains/dashboard-aggregation';
-import { failNextSchema } from '$lib/domains/schemas';
-import type { DashboardSummary } from '$lib/domains/types';
+import { buildDashboardSummary } from '$lib/domains/dashboard';
+import { failNextSchema } from '$lib/domains';
+import type { DashboardSummary } from '$lib/domains';
 import type { SeedName } from './mock-state';
 import type { InMemoryMockRepository } from './mock-repository';
 

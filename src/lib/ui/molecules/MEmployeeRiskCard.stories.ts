@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
 
 import MEmployeeRiskCard from './MEmployeeRiskCard.svelte';
-import type { EmployeeProfileSummary } from '$lib/domains/types';
+import type { EmployeeProfileSummary } from '$lib/domains';
 
 const summary: EmployeeProfileSummary = {
   user: {

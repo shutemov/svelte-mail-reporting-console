@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { AlertStatus, Severity } from '$lib/domains/types';
+  import type { AlertStatus, Severity } from '$lib/domains';
   import { severityLabel, statusLabel } from '$lib/domains/labels';
 
   export let status: AlertStatus | null = null;

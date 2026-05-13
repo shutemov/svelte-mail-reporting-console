@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Severity } from '$lib/domains/types';
+  import type { Severity } from '$lib/domains';
 
   type SeverityMixInput = Partial<Record<Severity, number | string | null | undefined>>;
 

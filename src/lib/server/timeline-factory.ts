@@ -1,4 +1,4 @@
-import type { DemoUser, TimelineEvent, TimelineEventType } from '$lib/domains/types';
+import type { DemoUser, TimelineEvent, TimelineEventType } from '$lib/domains';
 
 export function createTimelineEvent(input: {
   alertId: string;

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { formatEmployeePersona } from '$lib/domains/labels';
-  import type { EmployeeProfileSummary } from '$lib/domains/types';
+  import type { EmployeeProfileSummary } from '$lib/domains';
 
   export let summary: EmployeeProfileSummary;
 

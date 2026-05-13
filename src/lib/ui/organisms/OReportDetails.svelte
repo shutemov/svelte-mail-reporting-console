@@ -1,6 +1,6 @@
 <script lang="ts">
   import { formatRiskyActions } from '$lib/domains/labels';
-  import type { Report } from '$lib/domains/types';
+  import type { Report } from '$lib/domains';
   import MPageHeading from '$lib/ui/molecules/MPageHeading.svelte';
 
   export let report: Report;

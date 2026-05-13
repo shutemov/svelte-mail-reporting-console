@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { DemoUser } from '$lib/domains/types';
+  import type { DemoUser } from '$lib/domains';
 
   export let users: DemoUser[] = [];
   export let currentUserId = '';

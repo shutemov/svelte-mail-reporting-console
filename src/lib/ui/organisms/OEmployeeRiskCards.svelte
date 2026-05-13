@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { EmployeeProfileSummary } from '$lib/domains/types';
+  import type { EmployeeProfileSummary } from '$lib/domains';
   import MEmployeeRiskCard from '$lib/ui/molecules/MEmployeeRiskCard.svelte';
 
   export let summaries: EmployeeProfileSummary[] = [];

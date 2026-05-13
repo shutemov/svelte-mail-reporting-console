@@ -1,7 +1,7 @@
 <script lang="ts">
   import { formatDateTime } from '$lib/common/date-time';
   import { formatAlertStatus, formatRiskyActions } from '$lib/domains/labels';
-  import type { AlertDetailsView } from '$lib/domains/types';
+  import type { AlertDetailsView } from '$lib/domains';
   import AButton from '$lib/ui/atoms/AButton.svelte';
   import AStatusPill from '$lib/ui/atoms/AStatusPill.svelte';
   import MTimelineEvent from '$lib/ui/molecules/MTimelineEvent.svelte';

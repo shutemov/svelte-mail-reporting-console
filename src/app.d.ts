@@ -2,10 +2,10 @@
 declare global {
   namespace App {
     interface Locals {
-      user: import('$lib/domains/types').DemoUser;
+      user: import('$lib/domains').DemoUser;
     }
     interface PageData {
-      user: import('$lib/domains/types').DemoUser;
+      user: import('$lib/domains').DemoUser;
     }
   }
 }

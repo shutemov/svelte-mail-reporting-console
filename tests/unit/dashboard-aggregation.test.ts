@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { buildDashboardSummary } from '$lib/domains/dashboard-aggregation';
-import type { Alert, LearningAssignment, Report } from '$lib/domains/types';
+import { buildDashboardSummary } from '$lib/domains/dashboard';
+import type { Alert, LearningAssignment, Report } from '$lib/domains';
 
 const reports: Report[] = [
   {

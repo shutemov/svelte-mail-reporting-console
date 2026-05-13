@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte';
 
 import MDemoRoleSwitcher from './MDemoRoleSwitcher.svelte';
-import type { DemoUser } from '$lib/domains/types';
+import type { DemoUser } from '$lib/domains';
 
 const users: DemoUser[] = [
   {

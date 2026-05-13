@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { simulationConfigSchema, submitReportSchema } from '$lib/domains/schemas';
+import { simulationConfigSchema, submitReportSchema } from '$lib/domains';
 
 describe('submitReportSchema', () => {
   it('validates required fields', () => {

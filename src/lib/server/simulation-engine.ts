@@ -6,7 +6,7 @@ import type {
   Severity,
   SimulationConfig,
   SubmitReportInput
-} from '$lib/domains/types';
+} from '$lib/domains';
 import { simulationTemplates, type SimulationTemplate } from './simulation-templates';
 
 export const defaultSimulationConfig: SimulationConfig = {

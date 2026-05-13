@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { measure, expectWithinBudget } from '../utils/performance';
-import { calculateSeverity } from '$lib/domains/risk-scoring';
-import { buildDashboardSummary } from '$lib/domains/dashboard-aggregation';
+import { calculateSeverity } from '$lib/domains/risk';
+import { buildDashboardSummary } from '$lib/domains/dashboard';
 import { InMemoryMockRepository } from '$lib/server/mock-repository';
 
 describe('performance budgets', () => {

@@ -1,4 +1,4 @@
-import type { MutationResult, SimulationSummary } from '$lib/domains/types';
+import type { MutationResult, SimulationSummary } from '$lib/domains';
 
 type Fetcher = typeof globalThis.fetch;
 

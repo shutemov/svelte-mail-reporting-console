@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { generateSyntheticReport, pickSimulationReporter } from '$lib/server/simulation-engine';
-import type { DemoUser, SimulationConfig } from '$lib/domains/types';
+import type { DemoUser, SimulationConfig } from '$lib/domains';
 
 const config: SimulationConfig = {
   ratePerMinute: 5,

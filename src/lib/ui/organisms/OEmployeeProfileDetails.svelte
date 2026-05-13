@@ -1,7 +1,7 @@
 <script lang="ts">
   import { formatDateTime } from '$lib/common/date-time';
   import { formatEmployeePersona, formatLearningStatus, formatRiskyActions } from '$lib/domains/labels';
-  import type { EmployeeProfileDetails } from '$lib/domains/types';
+  import type { EmployeeProfileDetails } from '$lib/domains';
   import MMetricCard from '$lib/ui/molecules/MMetricCard.svelte';
 
   export let details: EmployeeProfileDetails;

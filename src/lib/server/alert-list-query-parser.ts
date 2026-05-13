@@ -1,5 +1,5 @@
-import { alertListQuerySchema } from '$lib/domains/schemas';
-import type { AlertListQuery } from '$lib/domains/types';
+import { alertListQuerySchema } from '$lib/domains';
+import type { AlertListQuery } from '$lib/domains';
 
 export function parseAlertListQuery(searchParams: URLSearchParams): AlertListQuery {
   const optionalParam = (name: string) => {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { applyAlertCommand, canApplyAlertCommand } from '$lib/domains/alert-lifecycle';
-import type { Alert, DemoUser } from '$lib/domains/types';
+import { applyAlertCommand, canApplyAlertCommand } from '$lib/domains/alert';
+import type { Alert, DemoUser } from '$lib/domains';
 
 const admin: DemoUser = { id: 'admin-1', role: 'admin', name: 'Admin' };
 const employee: DemoUser = { id: 'employee-1', role: 'employee', name: 'Employee' };

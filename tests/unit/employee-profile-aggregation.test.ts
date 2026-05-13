@@ -3,7 +3,7 @@ import {
   buildEmployeeProfileDetails,
   buildEmployeeProfileSummaries,
   calculateEmployeeRiskStatus
-} from '$lib/domains/employee-profile-aggregation';
+} from '$lib/domains/employee-profile';
 import { InMemoryMockRepository } from '$lib/server/mock-repository';
 
 describe('employee profile aggregation', () => {

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { RiskyAction, SubmitReportInput } from '$lib/domains/types';
+  import type { RiskyAction, SubmitReportInput } from '$lib/domains';
   import AButton from '$lib/ui/atoms/AButton.svelte';
   import AInput from '$lib/ui/atoms/AInput.svelte';
   import ATextarea from '$lib/ui/atoms/ATextarea.svelte';
