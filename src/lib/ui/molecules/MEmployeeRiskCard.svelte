@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { formatEmployeePersona } from '$lib/domains/labels';
   import type { EmployeeProfileSummary } from '$lib/domains/types';
 
   export let summary: EmployeeProfileSummary;
@@ -11,7 +12,7 @@
   <div class="heading">
     <div>
       <h3>{summary.user.name}</h3>
-      <p>{summary.user.persona?.replaceAll('_', ' ') ?? 'employee'}</p>
+      <p>{formatEmployeePersona(summary.user.persona)}</p>
     </div>
     <span class="status">{summary.riskStatusLabel}</span>
   </div>

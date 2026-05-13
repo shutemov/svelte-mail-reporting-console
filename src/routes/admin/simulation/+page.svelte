@@ -2,6 +2,8 @@
   import { invalidateAll } from '$app/navigation';
   import { onMount } from 'svelte';
   import { tickSimulation } from '$lib/client/tick-simulation';
+  import { formatShortTime } from '$lib/common/date-time';
+  import { formatSimulationTemplateId } from '$lib/domains/labels';
   import MSimulationMetricCard from '$lib/ui/molecules/MSimulationMetricCard.svelte';
   import OSimulationControlPanel from '$lib/ui/organisms/OSimulationControlPanel.svelte';
   import OSimulationFlowSettings from '$lib/ui/organisms/OSimulationFlowSettings.svelte';
@@ -78,13 +80,10 @@
           {#each summary.generatedCases.slice(0, 5) as item (item.alertId)}
             <a class="feed-item" href={`/admin/alerts/${item.alertId}`}>
               <span class="time">
-                {new Date(item.generatedAt).toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })}
+                {formatShortTime(item.generatedAt)}
               </span>
               <div>
-                <b>{item.alertId} / {item.templateId.replaceAll('-', ' ')}</b>
+                <b>{item.alertId} / {formatSimulationTemplateId(item.templateId)}</b>
                 <span>{item.groundTruth.outcome}, {item.groundTruth.severity} severity</span>
               </div>
               <span class={`pill ${item.groundTruth.severity}`}>queued</span>

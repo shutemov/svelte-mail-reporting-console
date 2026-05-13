@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { pluralize } from '$lib/common/text';
   import type { AlertDetailsView, AlertListQuery } from '$lib/domains/types';
   import AInput from '$lib/ui/atoms/AInput.svelte';
   import ASelect from '$lib/ui/atoms/ASelect.svelte';
@@ -26,7 +27,7 @@
   $: hasActiveFilters = Boolean(
     filters.status || filters.severity || filters.riskyAction || filters.reporterId
   );
-  $: totalQueueLabel = `${formatAlertCount(totalItems)} total in queue`;
+  $: totalQueueLabel = `${pluralize(totalItems, 'alert')} total in queue`;
   $: matchingLabel =
     items.length === 1 ? '1 alert matches filters' : `${items.length} alerts match filters`;
   $: queueTotalLabel = !hasActiveFilters
@@ -37,16 +38,13 @@
     visibleCount = Math.min(visibleCount + pageSize, items.length);
   }
 
-  function formatAlertCount(count: number) {
-    return `${count} ${count === 1 ? 'alert' : 'alerts'}`;
-  }
 </script>
 
 <section class="o-alert-queue">
   <div class="queue-viewbar" aria-label="Queue view presets">
     <div>
       <span>Queue view</span>
-      <b>Showing {visibleItems.length} of {formatAlertCount(items.length)}</b>
+      <b>Showing {visibleItems.length} of {pluralize(items.length, 'alert')}</b>
       <small>{queueTotalLabel}</small>
     </div>
     <p>Prioritize by severity, risky action, age, and evidence.</p>

@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { formatDateTime } from '$lib/common/date-time';
+  import { formatEmployeePersona, formatLearningStatus, formatRiskyActions } from '$lib/domains/labels';
   import type { EmployeeProfileDetails } from '$lib/domains/types';
   import MMetricCard from '$lib/ui/molecules/MMetricCard.svelte';
 
@@ -6,25 +8,18 @@
 
   $: summary = details.summary;
 
-  function formatDate(value: string | null | undefined): string {
-    return value ? new Date(value).toLocaleString() : 'n/a';
-  }
-
-  function formatAction(value: string): string {
-    return value.replaceAll('_', ' ');
-  }
 </script>
 
 <section class="o-employee-profile-details">
   <section class="hero {summary.riskStatus}">
     <div>
-      <p class="eyebrow">{details.user.persona?.replaceAll('_', ' ') ?? 'employee'}</p>
+      <p class="eyebrow">{formatEmployeePersona(details.user.persona)}</p>
       <h2>{details.user.name}</h2>
       <p>{summary.riskStatusLabel}</p>
     </div>
     <div class="last-report">
       <span>Last report</span>
-      <strong>{formatDate(summary.lastReportAt)}</strong>
+      <strong>{formatDateTime(summary.lastReportAt)}</strong>
     </div>
   </section>
 
@@ -56,7 +51,7 @@
           {#each details.recentRiskSignals as signal (signal.id)}
             <li>
               <strong>{signal.message}</strong>
-              <span>{signal.severity} &middot; {formatDate(signal.createdAt)}</span>
+              <span>{signal.severity} &middot; {formatDateTime(signal.createdAt)}</span>
             </li>
           {/each}
         </ul>
@@ -73,8 +68,8 @@
             <li>
               <a href={`/admin/alerts/${report.alertId}`} aria-label={`Open alert for ${report.subject}`}>
                 <strong>{report.subject}</strong>
-                <span>{report.sender} &middot; {formatDate(report.createdAt)}</span>
-                <small>{report.riskyActions.map(formatAction).join(', ')}</small>
+                <span>{report.sender} &middot; {formatDateTime(report.createdAt)}</span>
+                <small>{formatRiskyActions(report.riskyActions)}</small>
               </a>
             </li>
           {/each}
@@ -91,7 +86,7 @@
           {#each details.alerts as alert (alert.id)}
             <li>
               <strong>{alert.severity} / {alert.status}</strong>
-              <span>{alert.finalOutcome ?? 'pending'} &middot; {formatDate(alert.createdAt)}</span>
+              <span>{alert.finalOutcome ?? 'pending'} &middot; {formatDateTime(alert.createdAt)}</span>
             </li>
           {/each}
         </ul>
@@ -107,7 +102,7 @@
           {#each details.learningAssignments as assignment (assignment.id)}
             <li>
               <strong>{assignment.moduleId}</strong>
-              <span>{assignment.status} &middot; assigned {formatDate(assignment.assignedAt)}</span>
+              <span>{formatLearningStatus(assignment.status)} &middot; assigned {formatDateTime(assignment.assignedAt)}</span>
             </li>
           {/each}
         </ul>

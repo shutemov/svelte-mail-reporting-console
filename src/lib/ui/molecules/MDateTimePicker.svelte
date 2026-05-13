@@ -1,17 +1,25 @@
 <script lang="ts">
+  import {
+    addMonths,
+    buildCalendarDays,
+    formatDateText,
+    formatMonthYear,
+    getCurrentDateTimeInputValue,
+    getCurrentMonthCursor,
+    parseDateText,
+    parseDateTimeInputValue,
+    parseTimeText,
+    startOfMonth,
+    weekdayLabels
+  } from '$lib/common/date-time';
+
   export let name = '';
   export let value = '';
-
-  const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  const monthFormatter = new Intl.DateTimeFormat('en', {
-    month: 'long',
-    year: 'numeric'
-  });
 
   let dateText = '';
   let timeText = '';
   let open = false;
-  let monthCursor = startOfMonth(new Date());
+  let monthCursor = getCurrentMonthCursor();
   let lastIncomingValue = '';
 
   $: {
@@ -32,93 +40,14 @@
       return;
     }
 
-    const directMatch = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(nextValue);
-    if (directMatch) {
-      const [, year, month, day, hour, minute] = directMatch;
-      dateText = `${day}.${month}.${year}`;
-      timeText = `${hour}:${minute}`;
-      monthCursor = startOfMonth(new Date(Number(year), Number(month) - 1, 1));
+    const parsed = parseDateTimeInputValue(nextValue);
+    if (!parsed) {
       return;
     }
 
-    const parsed = new Date(nextValue);
-    if (Number.isNaN(parsed.getTime())) {
-      return;
-    }
-
-    dateText = formatDateText(parsed);
-    timeText = formatTimeText(parsed);
-    monthCursor = startOfMonth(parsed);
-  }
-
-  function startOfMonth(date: Date) {
-    return new Date(date.getFullYear(), date.getMonth(), 1);
-  }
-
-  function addDays(date: Date, days: number) {
-    const next = new Date(date);
-    next.setDate(next.getDate() + days);
-    return next;
-  }
-
-  function addMonths(date: Date, months: number) {
-    return new Date(date.getFullYear(), date.getMonth() + months, 1);
-  }
-
-  function pad(value: number) {
-    return String(value).padStart(2, '0');
-  }
-
-  function formatDateText(date: Date) {
-    return `${pad(date.getDate())}.${pad(date.getMonth() + 1)}.${date.getFullYear()}`;
-  }
-
-  function formatTimeText(date: Date) {
-    return `${pad(date.getHours())}:${pad(date.getMinutes())}`;
-  }
-
-  function formatYmd(date: Date) {
-    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
-  }
-
-  function parseDateText(text: string) {
-    const match = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(text.trim());
-    if (!match) {
-      return '';
-    }
-
-    const [, day, month, year] = match;
-    const date = new Date(Number(year), Number(month) - 1, Number(day));
-    if (
-      date.getFullYear() !== Number(year) ||
-      date.getMonth() !== Number(month) - 1 ||
-      date.getDate() !== Number(day)
-    ) {
-      return '';
-    }
-
-    return formatYmd(date);
-  }
-
-  function parseTimeText(text: string) {
-    const match = /^([01]\d|2[0-3]):([0-5]\d)$/.exec(text.trim());
-    return match ? text.trim() : '';
-  }
-
-  function buildCalendarDays(cursor: Date) {
-    const start = startOfMonth(cursor);
-    const offset = (start.getDay() + 6) % 7;
-    const firstCell = addDays(start, -offset);
-
-    return Array.from({ length: 42 }, (_, index) => {
-      const date = addDays(firstCell, index);
-      return {
-        date,
-        label: String(date.getDate()),
-        ymd: formatYmd(date),
-        inMonth: date.getMonth() === cursor.getMonth()
-      };
-    });
+    dateText = parsed.dateText;
+    timeText = parsed.timeText;
+    monthCursor = parsed.monthCursor;
   }
 
   function selectDate(date: Date) {
@@ -128,10 +57,10 @@
   }
 
   function setNow() {
-    const now = new Date();
-    dateText = formatDateText(now);
-    timeText = formatTimeText(now);
-    monthCursor = startOfMonth(now);
+    const now = getCurrentDateTimeInputValue();
+    dateText = now.dateText;
+    timeText = now.timeText;
+    monthCursor = now.monthCursor;
     open = false;
   }
 
@@ -194,14 +123,14 @@
         <button type="button" aria-label="Previous month" onclick={() => (monthCursor = addMonths(monthCursor, -1))}>
           <span></span>
         </button>
-        <strong>{monthFormatter.format(monthCursor)}</strong>
+        <strong>{formatMonthYear(monthCursor)}</strong>
         <button type="button" aria-label="Next month" onclick={() => (monthCursor = addMonths(monthCursor, 1))}>
           <span></span>
         </button>
       </div>
 
       <div class="calendar-grid">
-        {#each weekdays as weekday}
+        {#each weekdayLabels as weekday}
           <span class="weekday">{weekday}</span>
         {/each}
         {#each calendarDays as day (day.ymd)}

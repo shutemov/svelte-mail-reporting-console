@@ -1,10 +1,12 @@
 <script lang="ts">
+  import { formatDateTime } from '$lib/common/date-time';
   import type { TimelineEvent } from '$lib/domains/types';
+
   export let event: TimelineEvent;
 </script>
 
 <li class="m-timeline-event">
-  <time>{new Date(event.createdAt).toLocaleString()}</time>
+  <time>{formatDateTime(event.createdAt)}</time>
   <p class="message">{event.message}</p>
   <small class="type">{event.type}</small>
 </li>

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { formatLearningStatus } from '$lib/domains/labels';
   import type { LearningAssignmentView } from '$lib/domains/types';
   import AButton from '$lib/ui/atoms/AButton.svelte';
 
@@ -16,7 +17,7 @@
     </div>
     <div class="status-line">
       <span>Status</span>
-      <b>{item.assignment.status.replaceAll('_', ' ')}</b>
+      <b>{formatLearningStatus(item.assignment.status)}</b>
     </div>
     <div class="status-line">
       <span>Alert</span>

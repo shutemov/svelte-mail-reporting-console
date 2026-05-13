@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { formatShortTime } from '$lib/common/date-time';
   import type { SimulationSession } from '$lib/domains/types';
   import AButton from '$lib/ui/atoms/AButton.svelte';
   import AErrorMessage from '$lib/ui/atoms/AErrorMessage.svelte';
@@ -23,12 +24,7 @@
     </div>
     <div class="state-chip">
       <b>
-        {session.lastGeneratedAt
-          ? new Date(session.lastGeneratedAt).toLocaleTimeString([], {
-              hour: '2-digit',
-              minute: '2-digit'
-            })
-          : '-'}
+        {formatShortTime(session.lastGeneratedAt)}
       </b>
       <span>Last case</span>
     </div>

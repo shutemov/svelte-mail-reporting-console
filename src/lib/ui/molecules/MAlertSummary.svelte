@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { formatRiskyActions } from '$lib/domains/labels';
   import AStatusPill from '$lib/ui/atoms/AStatusPill.svelte';
   import type { AlertDetailsView } from '$lib/domains/types';
 
@@ -12,7 +13,7 @@
   </div>
   <div class="context">
     <span>{item.reporter.name}</span>
-    <span>{item.report.riskyActions.map((action) => action.replaceAll('_', ' ')).join(', ')}</span>
+    <span>{formatRiskyActions(item.report.riskyActions)}</span>
   </div>
   <div class="meta">
     <AStatusPill status={item.alert.status} />

@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { formatDateTime } from '$lib/common/date-time';
+  import { formatAlertStatus, formatRiskyActions } from '$lib/domains/labels';
   import type { AlertDetailsView } from '$lib/domains/types';
   import AButton from '$lib/ui/atoms/AButton.svelte';
   import AStatusPill from '$lib/ui/atoms/AStatusPill.svelte';
@@ -7,7 +9,7 @@
   export let details: AlertDetailsView;
   export let formError = '';
 
-  $: riskyActions = details.report.riskyActions.map((action) => action.replaceAll('_', ' ')).join(', ');
+  $: riskyActions = formatRiskyActions(details.report.riskyActions);
   $: canAssignLearning = details.alert.finalOutcome === 'malicious' && !details.learningAssignment;
 </script>
 
@@ -22,7 +24,7 @@
     <div class="state-grid" aria-label="Alert state">
       <div class="state-mini">
         <span>Status</span>
-        <b>{details.alert.status.replaceAll('_', ' ')}</b>
+        <b>{formatAlertStatus(details.alert.status)}</b>
       </div>
       <div class="state-mini">
         <span>Severity</span>
@@ -61,7 +63,7 @@
           </article>
           <article>
             <span>Received</span>
-            <b>{new Date(details.report.receivedAt).toLocaleString()}</b>
+            <b>{formatDateTime(details.report.receivedAt)}</b>
           </article>
         </div>
 

@@ -1,3 +1,4 @@
+import { formatRiskyAction } from './labels';
 import type {
   Alert,
   DemoUser,
@@ -160,7 +161,7 @@ function buildRiskSignals(
           type: action,
           severity: alert.severity,
           createdAt: report.createdAt,
-          message: action.replaceAll('_', ' ')
+          message: formatRiskyAction(action)
         });
       });
 

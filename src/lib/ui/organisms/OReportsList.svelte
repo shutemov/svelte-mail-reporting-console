@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { formatDateTime } from '$lib/common/date-time';
+
   type ReportListItem = {
     id: string;
     subject: string;
@@ -28,7 +30,7 @@
       {#each reports as report (report.id)}
         <li>
           <a href={`/employee/reports/${report.id}`}>{report.subject}</a>
-          <small>{new Date(report.createdAt).toLocaleString()}</small>
+          <small>{formatDateTime(report.createdAt)}</small>
         </li>
       {/each}
     </ul>

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { formatRiskyActions } from '$lib/domains/labels';
   import type { Report } from '$lib/domains/types';
   import MPageHeading from '$lib/ui/molecules/MPageHeading.svelte';
 
@@ -12,7 +13,7 @@
     <p><strong>Sender:</strong> {report.sender}</p>
     <p><strong>Subject:</strong> {report.subject}</p>
     <p><strong>Reason:</strong> {report.reason}</p>
-    <p><strong>Risky actions:</strong> {report.riskyActions.join(', ')}</p>
+    <p><strong>Risky actions:</strong> {formatRiskyActions(report.riskyActions)}</p>
     {#if report.messagePreview}
       <pre>{report.messagePreview}</pre>
     {/if}

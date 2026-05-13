@@ -2,6 +2,7 @@
   import { invalidateAll } from '$app/navigation';
   import { onMount } from 'svelte';
   import { tickSimulation } from '$lib/client/tick-simulation';
+  import { formatShortTime } from '$lib/common/date-time';
   import ODashboardSummary from '$lib/ui/organisms/ODashboardSummary.svelte';
   import OEmployeeRiskCards from '$lib/ui/organisms/OEmployeeRiskCards.svelte';
   import type { PageData } from './$types';
@@ -11,12 +12,7 @@
   let ticking = false;
 
   $: simulationSummary = data.simulationSummary;
-  $: lastGenerated = simulationSummary.session.lastGeneratedAt
-    ? new Date(simulationSummary.session.lastGeneratedAt).toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit'
-      })
-    : '-';
+  $: lastGenerated = formatShortTime(simulationSummary.session.lastGeneratedAt);
 
   const tourSteps = [
     { label: '1. Simulate', detail: 'Generate realistic mail load' },
