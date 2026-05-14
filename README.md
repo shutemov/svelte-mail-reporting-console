@@ -56,7 +56,7 @@ docker run --rm -p 3000:3000 -e ORIGIN=http://127.0.0.1:3000 suspicious-mail-rep
 
 The Docker image runs the SvelteKit production server with the same in-memory demo backend. It is intended for a quick showcase review, not as a production deployment artifact.
 
-`ORIGIN` must match the URL used in the browser. SvelteKit uses it to validate same-origin form POST requests in production.
+`ORIGIN` should match the URL used in the browser. SvelteKit uses it to validate same-origin form POST requests in production. The demo build also trusts `http://127.0.0.1:3000` and `http://localhost:3000` for local Docker runs.
 
 ## Container Publishing
 
