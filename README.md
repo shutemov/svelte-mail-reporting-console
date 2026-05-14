@@ -34,18 +34,33 @@ Storybook: http://127.0.0.1:6006
 
 ## Docker Demo
 
-Build the image:
+Run the published GHCR image:
+
+```bash
+docker run --rm -p 3000:3000 ghcr.io/shutemov/svelte-mail-reporting-console:latest
+```
+
+Open: http://127.0.0.1:3000
+
+Or build the image locally:
 
 ```bash
 docker build -t suspicious-mail-reporting-console .
 ```
 
-Run the container:
+Then run the local image:
 
 ```bash
 docker run --rm -p 3000:3000 suspicious-mail-reporting-console
 ```
 
-Open: http://127.0.0.1:3000
-
 The Docker image runs the SvelteKit production server with the same in-memory demo backend. It is intended for a quick showcase review, not as a production deployment artifact.
+
+## Container Publishing
+
+GitHub Actions builds and publishes the image to GitHub Container Registry on every push to `master`.
+
+Published tags:
+
+- `latest` for the current `master` build.
+- `sha-<commit>` for an immutable commit image.
