@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { enhance } from '$app/forms';
+  import type { SubmitFunction } from '@sveltejs/kit';
   import type { RiskyAction, SubmitReportInput } from '$lib/domains';
   import AButton from '$lib/ui/atoms/AButton.svelte';
   import AInput from '$lib/ui/atoms/AInput.svelte';
@@ -12,9 +14,22 @@
   export let fieldErrors: Record<string, string> = {};
   export let formError = '';
 
+  let pending = false;
+
+  const enhanceReport: SubmitFunction = () => {
+    pending = true;
+
+    return async ({ update }) => {
+      try {
+        await update();
+      } finally {
+        pending = false;
+      }
+    };
+  };
 </script>
 
-<form method="POST" class="o-report-form">
+<form method="POST" class="o-report-form" use:enhance={enhanceReport}>
   <MField label="Sender" error={fieldErrors.sender}>
     <AInput name="sender" value={values.sender ?? ''} placeholder="security@example.com" />
   </MField>
@@ -50,7 +65,9 @@
   </MField>
 
   <AErrorMessage message={formError} />
-  <AButton type="submit">Submit report</AButton>
+  <AButton type="submit" disabled={pending} loading={pending}>
+    {pending ? 'Submitting...' : 'Submit report'}
+  </AButton>
 </form>
 
 <style lang="scss">

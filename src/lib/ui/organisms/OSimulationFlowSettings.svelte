@@ -18,6 +18,7 @@
   export let form: SimulationForm | null = null;
 
   let pending = false;
+  let resetPending = false;
   let saved = false;
 
   $: values = {
@@ -59,9 +60,26 @@
     saved = false;
 
     return async ({ result, update }) => {
-      pending = false;
-      saved = result.type === 'success';
-      await update();
+      try {
+        await update();
+        saved = result.type === 'success';
+      } finally {
+        pending = false;
+      }
+    };
+  };
+
+  const enhanceResetDefaults: SubmitFunction = () => {
+    resetPending = true;
+    saved = false;
+
+    return async ({ result, update }) => {
+      try {
+        await update();
+        saved = result.type === 'success';
+      } finally {
+        resetPending = false;
+      }
     };
   };
 </script>
@@ -74,8 +92,10 @@
     </div>
     <span>Affects new synthetic alerts only</span>
 
-    <form method="POST" action="?/resetConfigDefaults">
-      <AButton type="submit" variant="secondary">Reset to defaults</AButton>
+    <form method="POST" action="?/resetConfigDefaults" use:enhance={enhanceResetDefaults}>
+      <AButton type="submit" variant="secondary" disabled={resetPending || pending} loading={resetPending}>
+        {resetPending ? 'Resetting...' : 'Reset to defaults'}
+      </AButton>
     </form>
   </div>
 

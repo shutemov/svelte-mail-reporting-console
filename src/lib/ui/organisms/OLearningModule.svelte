@@ -1,10 +1,26 @@
 <script lang="ts">
+  import { enhance } from '$app/forms';
+  import type { SubmitFunction } from '@sveltejs/kit';
   import { formatLearningStatus } from '$lib/domains/labels';
   import type { LearningAssignmentView } from '$lib/domains';
   import AButton from '$lib/ui/atoms/AButton.svelte';
 
   export let item: LearningAssignmentView;
   export let formError = '';
+
+  let pending = false;
+
+  const enhanceLearning: SubmitFunction = () => {
+    pending = true;
+
+    return async ({ update }) => {
+      try {
+        await update();
+      } finally {
+        pending = false;
+      }
+    };
+  };
 </script>
 
 <article class="o-learning-module">
@@ -29,9 +45,11 @@
     {/if}
 
     {#if item.assignment.status !== 'completed'}
-      <form method="POST">
+      <form method="POST" use:enhance={enhanceLearning}>
         <input type="hidden" name="assignmentId" value={item.assignment.id} />
-        <AButton type="submit">Mark as completed</AButton>
+        <AButton type="submit" disabled={pending} loading={pending}>
+          {pending ? 'Completing...' : 'Mark as completed'}
+        </AButton>
       </form>
     {/if}
   </section>

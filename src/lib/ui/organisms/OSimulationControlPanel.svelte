@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { enhance } from '$app/forms';
+  import type { SubmitFunction } from '@sveltejs/kit';
   import { formatShortTime } from '$lib/common/date-time';
   import type { SimulationSession } from '$lib/domains';
   import AButton from '$lib/ui/atoms/AButton.svelte';
@@ -6,6 +8,29 @@
 
   export let session: SimulationSession;
   export let formError = '';
+
+  type ControlAction = 'start' | 'pause' | 'inject' | 'reset';
+
+  let pendingAction: ControlAction | null = null;
+
+  const enhanceControl = (action: ControlAction): SubmitFunction => {
+    return () => {
+      pendingAction = action;
+
+      return async ({ update }) => {
+        try {
+          await update();
+        } finally {
+          pendingAction = null;
+        }
+      };
+    };
+  };
+
+  const enhanceStart = enhanceControl('start');
+  const enhancePause = enhanceControl('pause');
+  const enhanceInject = enhanceControl('inject');
+  const enhanceReset = enhanceControl('reset');
 </script>
 
 <section class="o-simulation-control-panel">
@@ -33,17 +58,44 @@
   <AErrorMessage message={formError} />
 
   <div class="actions">
-    <form method="POST" action="?/start">
-      <AButton type="submit" disabled={session.mode === 'running'}>Start</AButton>
+    <form method="POST" action="?/start" use:enhance={enhanceStart}>
+      <AButton
+        type="submit"
+        disabled={pendingAction !== null || session.mode === 'running'}
+        loading={pendingAction === 'start'}
+      >
+        Start
+      </AButton>
     </form>
-    <form method="POST" action="?/pause">
-      <AButton type="submit" variant="secondary" disabled={session.mode === 'paused'}>Pause</AButton>
+    <form method="POST" action="?/pause" use:enhance={enhancePause}>
+      <AButton
+        type="submit"
+        variant="secondary"
+        disabled={pendingAction !== null || session.mode === 'paused'}
+        loading={pendingAction === 'pause'}
+      >
+        Pause
+      </AButton>
     </form>
-    <form method="POST" action="?/inject">
-      <AButton type="submit" variant="secondary">Inject once</AButton>
+    <form method="POST" action="?/inject" use:enhance={enhanceInject}>
+      <AButton
+        type="submit"
+        variant="secondary"
+        disabled={pendingAction !== null}
+        loading={pendingAction === 'inject'}
+      >
+        Inject once
+      </AButton>
     </form>
-    <form method="POST" action="?/reset">
-      <AButton type="submit" variant="danger">Reset</AButton>
+    <form method="POST" action="?/reset" use:enhance={enhanceReset}>
+      <AButton
+        type="submit"
+        variant="danger"
+        disabled={pendingAction !== null}
+        loading={pendingAction === 'reset'}
+      >
+        Reset
+      </AButton>
     </form>
   </div>
 </section>

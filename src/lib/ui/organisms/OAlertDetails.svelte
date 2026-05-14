@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { enhance } from '$app/forms';
+  import type { SubmitFunction } from '@sveltejs/kit';
   import { formatDateTime } from '$lib/common/date-time';
   import { formatAlertStatus, formatRiskyActions } from '$lib/domains/labels';
   import type { AlertDetailsView } from '$lib/domains';
@@ -11,6 +13,29 @@
 
   $: riskyActions = formatRiskyActions(details.report.riskyActions);
   $: canAssignLearning = details.alert.finalOutcome === 'malicious' && !details.learningAssignment;
+
+  let pendingAction = '';
+
+  const enhanceAlertAction = (action: string): SubmitFunction => {
+    return () => {
+      pendingAction = action;
+
+      return async ({ update }) => {
+        try {
+          await update();
+        } finally {
+          pendingAction = '';
+        }
+      };
+    };
+  };
+
+  const enhanceStartInvestigation = enhanceAlertAction('startInvestigation');
+  const enhanceResolveAsSafe = enhanceAlertAction('resolveAsSafe');
+  const enhanceResolveAsMalicious = enhanceAlertAction('resolveAsMalicious');
+  const enhanceCloseAlert = enhanceAlertAction('closeAlert');
+  const enhanceAssignLearning = enhanceAlertAction('assignLearning');
+  const enhanceNote = enhanceAlertAction('note');
 </script>
 
 <section class="o-alert-details">
@@ -97,21 +122,49 @@
         {/if}
 
         <div class="decision-actions" aria-label="Resolve alert">
-          <form method="POST" action="?/command">
+          <form method="POST" action="?/command" use:enhance={enhanceStartInvestigation}>
             <input type="hidden" name="command" value="startInvestigation" />
-            <AButton type="submit" variant="secondary">Start investigation</AButton>
+            <AButton
+              type="submit"
+              variant="secondary"
+              disabled={pendingAction !== ''}
+              loading={pendingAction === 'startInvestigation'}
+            >
+              Start investigation
+            </AButton>
           </form>
-          <form method="POST" action="?/command">
+          <form method="POST" action="?/command" use:enhance={enhanceResolveAsSafe}>
             <input type="hidden" name="command" value="resolveAsSafe" />
-            <AButton type="submit" variant="secondary">Resolve safe</AButton>
+            <AButton
+              type="submit"
+              variant="secondary"
+              disabled={pendingAction !== ''}
+              loading={pendingAction === 'resolveAsSafe'}
+            >
+              Resolve safe
+            </AButton>
           </form>
-          <form method="POST" action="?/command">
+          <form method="POST" action="?/command" use:enhance={enhanceResolveAsMalicious}>
             <input type="hidden" name="command" value="resolveAsMalicious" />
-            <AButton type="submit" variant="danger">Resolve malicious</AButton>
+            <AButton
+              type="submit"
+              variant="danger"
+              disabled={pendingAction !== ''}
+              loading={pendingAction === 'resolveAsMalicious'}
+            >
+              Resolve malicious
+            </AButton>
           </form>
-          <form method="POST" action="?/command">
+          <form method="POST" action="?/command" use:enhance={enhanceCloseAlert}>
             <input type="hidden" name="command" value="closeAlert" />
-            <AButton type="submit" variant="secondary">Close alert</AButton>
+            <AButton
+              type="submit"
+              variant="secondary"
+              disabled={pendingAction !== ''}
+              loading={pendingAction === 'closeAlert'}
+            >
+              Close alert
+            </AButton>
           </form>
         </div>
 
@@ -120,17 +173,25 @@
           <b>{details.alert.finalOutcome ? `${details.alert.finalOutcome} label revealed` : 'Hidden during triage'}</b>
         </div>
 
-        <form method="POST" action="?/assignLearning" class="assign">
+        <form method="POST" action="?/assignLearning" class="assign" use:enhance={enhanceAssignLearning}>
           <input type="hidden" name="moduleId" value="phishing-basics" />
-          <AButton type="submit" disabled={!canAssignLearning}>Assign follow-up learning</AButton>
+          <AButton
+            type="submit"
+            disabled={pendingAction !== '' || !canAssignLearning}
+            loading={pendingAction === 'assignLearning'}
+          >
+            Assign follow-up learning
+          </AButton>
         </form>
       </section>
 
       <section class="decision-box">
         <p class="eyebrow">Investigation note</p>
-        <form method="POST" action="?/note" class="note">
+        <form method="POST" action="?/note" class="note" use:enhance={enhanceNote}>
           <textarea name="body" rows="4" placeholder="Add evidence, rationale, or handoff note"></textarea>
-          <AButton type="submit" variant="secondary">Add note</AButton>
+          <AButton type="submit" variant="secondary" disabled={pendingAction !== ''} loading={pendingAction === 'note'}>
+            Add note
+          </AButton>
         </form>
       </section>
     </aside>
