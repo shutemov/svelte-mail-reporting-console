@@ -81,6 +81,7 @@
 
   <form method="POST" action="?/updateConfig" use:enhance={enhanceSettings} class="settings-form">
     <AErrorMessage message={form?.formError ?? ''} />
+    <input type="hidden" name="seed" value={values.seed} />
 
     <label>
       <span>Rate per minute</span>
@@ -169,13 +170,6 @@
 
       <AErrorMessage message={errors.severityMix ?? ''} />
     </fieldset>
-
-    <label>
-      <span>Seed</span>
-      <input name="seed" type="number" step="1" value={values.seed} on:wheel={releaseNumberInputWheel} />
-      <small>Same seed plus same sequence gives repeatable synthetic reports.</small>
-      <AErrorMessage message={errors.seed ?? ''} />
-    </label>
 
     <ACheckbox
       name="autoStartOnReset"
