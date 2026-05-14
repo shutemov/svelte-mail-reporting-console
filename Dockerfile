@@ -19,6 +19,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV HOST=0.0.0.0
 ENV PORT=3000
+ENV ORIGIN=http://127.0.0.1:3000
 
 COPY --chown=node:node --from=builder /app/build ./build
 COPY --chown=node:node --from=builder /app/package.json ./package.json

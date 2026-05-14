@@ -37,7 +37,7 @@ Storybook: http://127.0.0.1:6006
 Run the published GHCR image:
 
 ```bash
-docker run --rm -p 3000:3000 ghcr.io/shutemov/svelte-mail-reporting-console:latest
+docker run --rm -p 3000:3000 -e ORIGIN=http://127.0.0.1:3000 ghcr.io/shutemov/svelte-mail-reporting-console:latest
 ```
 
 Open: http://127.0.0.1:3000
@@ -51,10 +51,12 @@ docker build -t suspicious-mail-reporting-console .
 Then run the local image:
 
 ```bash
-docker run --rm -p 3000:3000 suspicious-mail-reporting-console
+docker run --rm -p 3000:3000 -e ORIGIN=http://127.0.0.1:3000 suspicious-mail-reporting-console
 ```
 
 The Docker image runs the SvelteKit production server with the same in-memory demo backend. It is intended for a quick showcase review, not as a production deployment artifact.
+
+`ORIGIN` must match the URL used in the browser. SvelteKit uses it to validate same-origin form POST requests in production.
 
 ## Container Publishing
 
