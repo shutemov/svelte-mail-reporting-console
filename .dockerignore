@@ -1,0 +1,13 @@
+.git
+.svelte-kit
+build
+coverage
+node_modules
+playwright-report
+storybook-static
+test-results
+vite.config.ts.timestamp-*
+
+.env
+.env.*
+npm-debug.log*
